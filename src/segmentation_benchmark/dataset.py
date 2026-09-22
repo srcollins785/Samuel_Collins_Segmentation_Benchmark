@@ -234,4 +234,17 @@ def build_loader(dataset, batch_size: int, shuffle: bool, workers: int = 4,
         generator=generator,
         persistent_workers=workers > 0,
         pin_memory=False,
+        # Training batches of one are dropped. PSPNet's pyramid pooling
+        # reduces the feature map to 1x1 in its widest branch, and batch
+        # normalization over a (1, C, 1, 1) tensor has a single value per
+        # channel and raises. A benchmark that died in the last batch of an
+        # epoch, for one architecture, after twenty minutes of training, is
+        # a bad way to discover that.
+        #
+        # Only on the training loader: evaluation runs under model.eval(),
+        # where batch norm uses its running statistics and a batch of one is
+        # fine, and dropping evaluation images would mean the models were
+        # scored on different test sets. At batch size 8 this discards
+        # nothing anyway - all three splits divide exactly.
+        drop_last=shuffle,
     )

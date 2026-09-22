@@ -46,3 +46,10 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+filterwarnings = [
+    # pycocotools 2.0.11 calls __array__ in a way numpy 2.x deprecates. The
+    # decode is correct -- test_mask_utils checks the resulting pixels -- and
+    # the warning fires on every annotation, so it is silenced rather than
+    # left to bury real ones.
+    "ignore:__array__ implementation doesn't accept a copy keyword:DeprecationWarning",
+]

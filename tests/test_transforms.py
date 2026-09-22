@@ -118,10 +118,19 @@ class TestRotation:
         assert not (out["mask"] == 0).any(), "invented canvas labeled background"
 
     def test_instance_masks_do_not_gain_invented_area(self):
+        """Rotation may clip an object away; it must not grow one.
+
+        The tolerance is a few percent rather than exact. Rotating a mask by
+        nearest neighbor resamples an axis-aligned rectangle onto a diagonal
+        footprint, and aliasing along the new edges moves the pixel count by
+        a handful in either direction. What would signal a real fault is the
+        count climbing substantially, which is what happens if the fill value
+        for exposed canvas is wrong.
+        """
         sample = make_sample()
         before = sample["masks"].sum()
         out = T.RandomRotation(degrees=25.0, probability=1.0)(sample)
-        assert out["masks"].sum() <= before + 1
+        assert out["masks"].sum() <= before * 1.05
 
 
 class TestInstanceAlignment:
