@@ -1,0 +1,37 @@
+{
+  "model": "fcn_resnet50",
+  "task": "semantic",
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 1.1769054134686787,
+      "train_cross_entropy": 1.5279751817385356,
+      "train_dice_loss": 0.8258356849352518,
+      "val_loss": 0.7318932016690572,
+      "train_mean_iou": 0.3238866907411189,
+      "train_dice": 0.3863310631330636,
+      "val_mean_iou": 0.29267682109690796,
+      "val_mean_iou_foreground": 0.1864833559071573,
+      "val_dice": 0.3585289943141576,
+      "val_pixel_accuracy": 0.8444901717401921,
+      "val_per_class_iou": {
+        "background": 0.8236441470456614,
+        "person": 0.6031162899553904,
+        "car": 0.0,
+        "bicycle": 0.0,
+        "dog": 0.32930048958039626,
+        "cat": 0.0
+      },
+      "learning_rate": 0.0001,
+      "epoch_seconds": 4.695753708016127,
+      "device_memory_mb": 535.498291015625
+    }
+  ],
+  "completed_epochs": 1,
+  "best_epoch": 1,
+  "best_score": 0.29267682109690796,
+  "selection_metric": "val_mean_iou",
+  "total_train_seconds": 4.695753708016127,
+  "mean_epoch_seconds": 4.695753708016127,
+  "timing_note": "epoch_seconds covers the training pass only: it excludes validation, checkpoint writing and dataset construction, which are timed separately so Section 32's comparison is between the models rather than between their I/O"
+}

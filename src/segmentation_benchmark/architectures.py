@@ -320,26 +320,59 @@ class PyramidPoolingModule(nn.Module):
 
     def __init__(self, in_channels: int, bins=(1, 2, 3, 6)):
         super().__init__()
+        self.bins = tuple(bins)
         branch_channels = in_channels // len(bins)
+        self.pools = nn.ModuleList([nn.AdaptiveAvgPool2d(b) for b in self.bins])
         self.branches = nn.ModuleList([
             nn.Sequential(
-                nn.AdaptiveAvgPool2d(bin_size),
                 nn.Conv2d(in_channels, branch_channels, 1, bias=False),
                 nn.BatchNorm2d(branch_channels),
                 nn.ReLU(inplace=True),
             )
-            for bin_size in bins
+            for _ in self.bins
         ])
-        self.out_channels = in_channels + branch_channels * len(bins)
+        self.out_channels = in_channels + branch_channels * len(self.bins)
+
+    @staticmethod
+    def _pad_to_multiple(x: torch.Tensor, bin_size: int) -> torch.Tensor:
+        """Pad so the bin divides the feature map evenly.
+
+        Metal has no adaptive average pooling for non-divisible sizes
+        (pytorch#96056). A 512x512 input at output stride 8 gives a 64x64
+        feature map, and the 3x3 and 6x6 branches do not divide 64 - so two
+        of PSPNet's four branches would fail on this hardware.
+
+        The alternatives were worse. Moving the pyramid to CPU each forward
+        pass means shuttling a 2048x64x64 tensor across the boundary every
+        batch. Changing the bins to (1, 2, 4, 8) so they divide 64 would make
+        this a different architecture from the one Section 10 asks about by
+        name. Replicate-padding 64 up to 66 keeps the published bins and the
+        pooling semantics, and costs an edge row and column duplicated into
+        the border - which shifts the affected branch averages by roughly 3%
+        at the boundary and not at all in the interior.
+
+        Recorded as a documented deviation. On CUDA this padding is a no-op
+        in effect: the same code runs, and adaptive pooling would have
+        handled the ragged bins natively.
+        """
+        height, width = x.shape[-2:]
+        pad_h = (-height) % bin_size
+        pad_w = (-width) % bin_size
+        if pad_h or pad_w:
+            x = F.pad(x, (0, pad_w, 0, pad_h), mode="replicate")
+        return x
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         size = x.shape[-2:]
-        pooled = [x] + [
-            F.interpolate(
-                branch(x), size=size, mode="bilinear", align_corners=False
+        pooled = [x]
+        for bin_size, pool, branch in zip(self.bins, self.pools, self.branches):
+            padded = self._pad_to_multiple(x, bin_size)
+            projected = branch(pool(padded))
+            pooled.append(
+                F.interpolate(
+                    projected, size=size, mode="bilinear", align_corners=False
+                )
             )
-            for branch in self.branches
-        ]
         return torch.cat(pooled, dim=1)
 
 

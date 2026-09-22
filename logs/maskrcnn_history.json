@@ -1,0 +1,37 @@
+{
+  "model": "maskrcnn",
+  "task": "instance",
+  "epochs": [
+    {
+      "epoch": 1,
+      "epoch_seconds": 3.6033016671426594,
+      "device_memory_mb": 689.2763671875,
+      "learning_rate": 0.0001,
+      "train_loss_classifier": 0.4809708831210931,
+      "train_loss_box_reg": 0.11599202640354633,
+      "train_loss_mask": 1.2539789577325184,
+      "train_loss_objectness": 0.9945497214794159,
+      "train_loss_rpn_box_reg": 0.09758234862238169,
+      "train_total": 2.943073868751526
+    },
+    {
+      "epoch": 2,
+      "epoch_seconds": 3.6325038748327643,
+      "device_memory_mb": 865.998779296875,
+      "learning_rate": 0.0001,
+      "train_loss_classifier": 0.2079907258351644,
+      "train_loss_box_reg": 0.12943363562226295,
+      "train_loss_mask": 0.6736694077650706,
+      "train_loss_objectness": 0.39634980882207554,
+      "train_loss_rpn_box_reg": 0.1189219740529855,
+      "train_total": 1.5263655185699463
+    }
+  ],
+  "completed_epochs": 2,
+  "best_epoch": 2,
+  "best_score": -1.5263655185699463,
+  "selection_metric": "train_total_loss",
+  "total_train_seconds": 7.235805541975424,
+  "mean_epoch_seconds": 3.617902770987712,
+  "timing_note": "epoch_seconds covers the training pass only: it excludes validation, checkpoint writing and dataset construction, which are timed separately so Section 32's comparison is between the models rather than between their I/O"
+}
