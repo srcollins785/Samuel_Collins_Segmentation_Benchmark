@@ -1,0 +1,63 @@
+# Pinned to the versions the reported results were produced with.
+#
+# Every dependency installs into one Python 3.12 environment, so all ten
+# architectures train and are measured under a single documented software
+# stack - which is what Section 13 asks for when it says to keep conditions
+# as similar as technically possible.
+#
+# That single environment is not free. On macOS, ultralytics excludes numpy
+# 2.0 through 2.3.4, and releases before 8.4 excluded all of numpy 2.x, which
+# is why the classification benchmark needed a second virtual environment and
+# had to report YOLO's results under different library versions from the other
+# nine models. ultralytics 8.4 permits numpy >= 2.3.5, and every other package
+# here is compatible with it, so the split is no longer necessary. Downgrading
+# ultralytics below 8.4 reintroduces it.
+#
+#   python3.12 -m venv .venv
+#   source .venv/bin/activate
+#   pip install -r requirements.txt
+#   pip install -e .
+
+# Core numerics and imaging.
+numpy==2.5.3
+pandas==3.0.6
+pillow==12.3.0
+matplotlib==3.11.2
+scipy==1.18.1
+opencv-python==5.0.0.93
+
+# Section 10, Model 1: the traditional K-Means baseline and its documented
+# alternatives (SLIC superpixels, watershed, felzenszwalb).
+scikit-learn==1.9.1
+scikit-image==0.26.0
+
+# Deep learning. torchvision supplies FCN-ResNet50, DeepLabV3-ResNet50 and
+# Mask R-CNN with pretrained weights; U-Net, U-Net++, SegNet and PSPNet are
+# implemented against torch directly. There is no CUDA build on this
+# hardware - training runs on the Metal (MPS) backend, and every measurement
+# that Section 29 phrases in CUDA terms is recorded with its MPS equivalent
+# or marked N/A with the reason.
+torch==2.14.0
+torchvision==0.29.0
+
+# Section 5: COCO annotation parsing and RLE mask decoding; Section 25: the
+# COCOeval mask AP evaluator.
+pycocotools==2.0.11
+
+# Model 10: SegFormer-B0.
+transformers==5.17.0
+
+# Model 9: YOLO segmentation. See the note above before changing this pin.
+ultralytics==8.4.160
+
+# Section 30: parameter and complexity accounting. fvcore is tried first
+# because it reports which operators it could not account for; thop is the
+# fallback.
+fvcore==0.1.5.post20221221
+thop==0.1.1.post2209072238
+
+# Test suite.
+pytest==9.1.1
+
+# Report generation (scripts/, not the installed package).
+Markdown==3.10.3

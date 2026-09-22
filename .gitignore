@@ -1,0 +1,29 @@
+# Section 59 forbids committing large checkpoints. The results, plots,
+# manifests and configurations that the report is built from are committed;
+# the multi-gigabyte artifacts they were derived from are not.
+
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# The COCO subset is rebuilt by scripts/build_coco_subset.py from the
+# committed split manifest, at the same seed, so the images themselves do
+# not need to be in the repository.
+data/images/
+data/masks/
+data/annotations/*.json
+data/annotations/*.zip
+!data/split_manifest.json
+
+# Trained weights. Section 59 asks that checkpoint access be documented
+# instead; the README says where they are.
+checkpoints/
+yolo_workspace/
+*.pt
+*.pth
+
+.DS_Store
