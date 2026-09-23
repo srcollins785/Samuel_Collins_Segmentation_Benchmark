@@ -23,14 +23,15 @@ the ``conventions`` block of every result this module produces:
 * **Maximum detections** - INSTANCE_MAX_DETECTIONS (100) per image, COCO's
   standard.
 
-**Resolution.** Models predict on 512x512 inputs, and their masks are
-resized back to each image's native resolution before scoring against the
-unmodified COCO ground truth. The alternative - rescaling the ground truth
-down to 512x512 - would resample the annotations and make these numbers
-incomparable with every published COCO result. The consequence is that the
-instance track is scored at native resolution while the semantic track is
-scored at 512x512, which is recorded here rather than left to be inferred.
-Section 26 forbids comparing the two tracks' numbers directly in any case.
+**Resolution.** Models predict at whatever input size the run configures,
+and their masks are resized back to each image's native resolution before
+scoring against the unmodified COCO ground truth. The alternative -
+rescaling the ground truth down to the model's input size - would resample
+the annotations and make these numbers incomparable with every published
+COCO result. The consequence is that the instance track is scored at native
+resolution while the semantic track is scored at the input size, which is
+recorded in each result file rather than left to be inferred. Section 26
+forbids comparing the two tracks' numbers directly in any case.
 """
 
 import contextlib
@@ -229,6 +230,15 @@ def _per_class_ap(coco_gt: COCO, results: list, image_ids: list) -> dict:
     return per_class
 
 
+def _release_cache(device) -> None:
+    """Hand cached blocks back, on whichever backend is in use."""
+    device_type = getattr(device, "type", str(device))
+    if device_type == "mps":
+        torch.mps.empty_cache()
+    elif device_type == "cuda":
+        torch.cuda.empty_cache()
+
+
 def evaluate_instance(model, loader, device, split: str = "test",
                       score_threshold: float = INSTANCE_SCORE_THRESHOLD,
                       include_box_ap: bool = True) -> dict:
@@ -247,7 +257,7 @@ def evaluate_instance(model, loader, device, split: str = "test",
     mask_results, image_ids = [], []
 
     with torch.no_grad():
-        for images, targets in loader:
+        for batch_index, (images, targets) in enumerate(loader):
             images_on_device = [image.to(device) for image in images]
             outputs = model(images_on_device)
 
@@ -260,6 +270,25 @@ def evaluate_instance(model, loader, device, split: str = "test",
                     native_size=(record["height"], record["width"]),
                     score_threshold=score_threshold,
                 )
+
+            # Release the backend's cached blocks periodically.
+            #
+            # Metal's caching allocator does not return freed blocks to the
+            # OS on its own, and its own accounting does not report what it
+            # is holding: during a 25-epoch Mask R-CNN run this reported a
+            # steady 863 MiB while the system accumulated 20.6 GB of wired
+            # memory and began swapping. Epoch time went from 740 seconds to
+            # 4,374 and the run had to be stopped at epoch 14.
+            #
+            # Detection models make this worse than semantic ones do,
+            # because each image produces a variable number of differently
+            # shaped mask tensors, so the allocator's pool fragments into
+            # many size classes that are never reused.
+            del outputs, images_on_device
+            if batch_index % 25 == 24:
+                _release_cache(device)
+
+    _release_cache(device)
 
     return summarize_instance_results(
         coco_gt, mask_results, image_ids, include_box_ap
