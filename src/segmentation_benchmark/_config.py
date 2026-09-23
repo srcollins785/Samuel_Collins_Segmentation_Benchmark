@@ -130,9 +130,17 @@ INFERENCE_WARMUP_ITERS = 10
 INFERENCE_TIMED_IMAGES = 200
 INFERENCE_BATCH_SIZES = (1, 8)
 
-# Section 24: boundary evaluation tolerance, in pixels, at the evaluation
-# resolution (INPUT_SIZE). A predicted boundary pixel counts as matched if a
+# Section 24: boundary evaluation tolerance, in pixels at whatever resolution
+# the run evaluates at. A predicted boundary pixel counts as matched if a
 # ground-truth boundary pixel lies within this distance.
+#
+# The absolute value is what every model is held to, so the ranking between
+# them does not depend on it; the absolute scores do. Three pixels is 0.6% of
+# image width at 512 and 1.2% at 256, so boundary F1 from a 256 run reads
+# slightly more forgiving than the same models would score at 512. Both the
+# tolerance and the resolution are recorded with every boundary result, which
+# is what Section 24 asks for, and comparing boundary numbers across runs at
+# different resolutions is not valid without accounting for it.
 BOUNDARY_TOLERANCE_PX = 3
 
 # Section 25: COCO-style instance evaluation settings.

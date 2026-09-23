@@ -1,0 +1,72 @@
+==============================================================
+=== kmeans  (21:46:44)
+==============================================================
+Split checksum : a61d376d4a98c607
+Split sizes    : {'train': 5000, 'val': 1000, 'test': 1000}
+Device         : mps
+Input size     : 256x256
+
+Running 1 model(s): kmeans
+Protocol: 25 epochs, batch 8, 256px
+
+[1/1] kmeans
+  fitting the cluster-to-class mapping on 300 training images
+  evaluating on the held-out test split
+  done in 2.0 min
+
+
+Building tables
+  semantic_segmentation_results.csv             1 rows
+  instance_segmentation_results.csv             0 rows
+  segmentation_efficiency_results.csv           1 rows
+  per_class_iou.csv                             6 rows
+  per_class_boundary_f1.csv                     6 rows
+  training_history.csv                          0 rows
+Building figures
+  miou_comparison                            miou_comparison.png
+  dice_comparison                            dice_comparison.png
+  parameters                                 parameters.png
+  model_size                                 model_size.png
+  training_time                              training_time.png
+  inference_speed                            inference_speed.png
+  miou_vs_latency                            miou_vs_latency.png
+  per_class_iou                              per_class_iou.png
+  boundary_f1                                boundary_f1.png
+
+================================================================
+Completed 1/1 in 2.1 min
+==============================================================
+=== segformer  (21:48:49)
+==============================================================
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] You passed `num_labels=6` which is incompatible to the `id2label` map of length `1000`.
+Split checksum : a61d376d4a98c607
+Split sizes    : {'train': 5000, 'val': 1000, 'test': 1000}
+Device         : mps
+Input size     : 256x256
+
+Running 1 model(s): segformer
+Protocol: 25 epochs, batch 8, 256px
+
+[1/1] segformer
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 57243.84it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+  training segformer for 25 epochs at 256px

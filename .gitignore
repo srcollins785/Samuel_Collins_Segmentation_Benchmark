@@ -37,6 +37,12 @@ plots/*.png
 confusion_matrices/*.json
 predictions/**/*.png
 
+# The generated report, for the same reason. A report built from a partial
+# run reads exactly like a finished one; the real document is added with
+# `git add -f report/` once every model has completed.
+report/*.md
+report/*.html
+
 # Trained weights. Section 59 asks that checkpoint access be documented
 # instead; the README says where they are.
 checkpoints/
