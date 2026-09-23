@@ -150,9 +150,11 @@ class InstanceSegmentationDataset(Dataset):
         self._to_coco = {v: k for k, v in COCO_CATEGORY_IDS.items()}
 
         self.image_dir = IMAGES_DIR / split
+        # normalize=False: torchvision's detection models and ultralytics
+        # both standardize internally. See transforms.ToTensor.
         self.transforms = (
-            build_train_transforms(size) if self.augment
-            else build_eval_transforms(size)
+            build_train_transforms(size, normalize=False) if self.augment
+            else build_eval_transforms(size, normalize=False)
         )
 
     def __len__(self) -> int:

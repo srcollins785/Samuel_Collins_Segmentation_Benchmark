@@ -337,24 +337,42 @@ class ColorJitter:
 
 
 class ToTensor:
-    """Convert to tensors, normalize the image, leave label values intact.
+    """Convert to tensors, optionally normalize the image, keep labels intact.
 
-    The image becomes float and is standardized. The masks do not: a class
-    ID is a label, not a measurement, and scaling it to [0, 1] would make
-    255 - the ignore sentinel - indistinguishable from a class ID under
-    rounding. The semantic mask becomes int64 because that is what
-    cross-entropy expects as its target.
+    The masks are never scaled: a class ID is a label, not a measurement,
+    and mapping it into [0, 1] would make 255 - the ignore sentinel -
+    indistinguishable from a class ID under rounding. The semantic mask
+    becomes int64 because that is what cross-entropy expects as its target.
+
+    ``normalize`` exists because the two tracks genuinely disagree about
+    what a prepared image is, and pretending otherwise silently destroys
+    one of them. The seven semantic models take standardized input. The two
+    instance models do not: torchvision's detection models wrap themselves
+    in a GeneralizedRCNNTransform that applies ImageNet normalization
+    internally, with exactly the mean and standard deviation below, and
+    ultralytics does its own preprocessing likewise. Handing either one an
+    already-standardized image normalizes it twice.
+
+    That failure is quiet. It does not raise, the shapes are right, training
+    runs and losses fall. It surfaced here only because a stock pretrained
+    Mask R-CNN scored 0.012 mask AP against a published 0.34, with large
+    objects scoring worse than small ones - the signature of an input
+    distribution the backbone has never seen.
     """
 
-    def __init__(self, mean=IMAGENET_MEAN, std=IMAGENET_STD):
+    def __init__(self, mean=IMAGENET_MEAN, std=IMAGENET_STD,
+                 normalize: bool = True):
         self.mean = mean
         self.std = std
+        self.normalize = normalize
 
     def __call__(self, sample: dict) -> dict:
         image = torch.from_numpy(sample["image"]).permute(2, 0, 1).float().div(255)
-        mean = torch.tensor(self.mean).view(3, 1, 1)
-        std = torch.tensor(self.std).view(3, 1, 1)
-        sample["image"] = (image - mean) / std
+        if self.normalize:
+            mean = torch.tensor(self.mean).view(3, 1, 1)
+            std = torch.tensor(self.std).view(3, 1, 1)
+            image = (image - mean) / std
+        sample["image"] = image
         sample["mask"] = torch.from_numpy(sample["mask"].astype(np.int64))
 
         if "masks" in sample:
@@ -369,14 +387,20 @@ class ToTensor:
 
     def describe(self) -> dict:
         return {
-            "transform": "ToTensor+Normalize",
-            "mean": list(self.mean),
-            "std": list(self.std),
-            "note": "image only; mask values are labels and are not scaled",
+            "transform": "ToTensor+Normalize" if self.normalize else "ToTensor",
+            "normalize": self.normalize,
+            "mean": list(self.mean) if self.normalize else None,
+            "std": list(self.std) if self.normalize else None,
+            "note": (
+                "image only; mask values are labels and are not scaled. "
+                + ("Standardized here for the semantic models."
+                   if self.normalize else
+                   "Left in [0, 1]: the instance models normalize internally.")
+            ),
         }
 
 
-def build_train_transforms(size: int) -> Compose:
+def build_train_transforms(size: int, normalize: bool = True) -> Compose:
     """The Section 14 training pipeline, in the order the assignment lists it.
 
     Resize, flip, crop, rotation, color jitter, tensor conversion,
@@ -390,15 +414,15 @@ def build_train_transforms(size: int) -> Compose:
         RandomScaleCrop(size, (0.75, 1.25), 0.5),
         RandomRotation(10.0, 0.5),
         ColorJitter(0.3, 0.3, 0.3, 0.05, 0.5),
-        ToTensor(),
+        ToTensor(normalize=normalize),
     ])
 
 
-def build_eval_transforms(size: int) -> Compose:
+def build_eval_transforms(size: int, normalize: bool = True) -> Compose:
     """The Section 14 validation and test pipeline: deterministic only.
 
     No randomness at all, so validation scores differ between epochs because
     the weights changed and for no other reason, and so the held-out test
     images are identical for all ten architectures.
     """
-    return Compose([Resize(size), ToTensor()])
+    return Compose([Resize(size), ToTensor(normalize=normalize)])

@@ -247,3 +247,35 @@ class TestPipelines:
         described = T.build_train_transforms(64).describe()
         jitter = next(s for s in described if s["transform"] == "ColorJitter")
         assert jitter["applies_to"] == "image only"
+
+
+class TestNormalizationByTrack:
+    """The two tracks disagree about what a prepared image is.
+
+    torchvision's detection models wrap themselves in a
+    GeneralizedRCNNTransform that applies ImageNet normalization
+    internally. Standardizing before handing them an image normalizes it
+    twice, which does not raise and does not change any shape -- a stock
+    pretrained Mask R-CNN simply scored 0.012 mask AP instead of 0.457.
+    """
+
+    def test_semantic_pipeline_standardizes(self):
+        out = T.build_eval_transforms(32)(
+            make_sample(size=64, with_instances=False)
+        )
+        assert out["image"].min() < -0.5
+
+    def test_instance_pipeline_leaves_images_in_unit_range(self):
+        out = T.build_eval_transforms(32, normalize=False)(
+            make_sample(size=64, with_instances=False)
+        )
+        assert out["image"].min() >= 0.0
+        assert out["image"].max() <= 1.0
+
+    def test_describe_records_which_was_used(self):
+        """A results file must say which input convention produced it."""
+        normalized = T.build_eval_transforms(32).describe()[-1]
+        raw = T.build_eval_transforms(32, normalize=False).describe()[-1]
+        assert normalized["normalize"] is True
+        assert raw["normalize"] is False
+        assert raw["mean"] is None
