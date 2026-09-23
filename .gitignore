@@ -26,6 +26,17 @@ data/annotations/*.zip
 # added deliberately with `git add -f logs/` once the full run completes.
 logs/*.json
 
+# Results and figures, for the same reason: they are written by every run,
+# including the short ones used while developing and the synthetic ones used
+# to prove the table and figure code works before any model had trained.
+# The genuine set is added with `git add -f results/ plots/` once the real
+# benchmark completes, so a number enters the repository as a decision.
+results/*.csv
+results/raw/
+plots/*.png
+confusion_matrices/*.json
+predictions/**/*.png
+
 # Trained weights. Section 59 asks that checkpoint access be documented
 # instead; the README says where they are.
 checkpoints/
