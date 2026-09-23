@@ -38,7 +38,7 @@ yolo = ["ultralytics>=8.4"]
 # Section 30 complexity accounting.
 complexity = ["fvcore>=0.1.5", "thop>=0.1.1"]
 dev = ["pytest>=8.3"]
-report = ["markdown>=3.7"]
+report = ["markdown>=3.7", "beautifulsoup4>=4.12"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

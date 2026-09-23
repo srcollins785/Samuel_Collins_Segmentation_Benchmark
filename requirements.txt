@@ -59,5 +59,8 @@ thop==0.1.1.post2209072238
 # Test suite.
 pytest==9.1.1
 
-# Report generation (scripts/, not the installed package).
+# Report generation (scripts/, not the installed package). beautifulsoup4
+# is used only to right-align numeric table columns in the PDF; without it
+# the tables render left-aligned and everything else is unchanged.
 Markdown==3.10.3
+beautifulsoup4==4.15.0
