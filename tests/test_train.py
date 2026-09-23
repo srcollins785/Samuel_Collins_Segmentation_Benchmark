@@ -48,7 +48,7 @@ class TestTrainingHistory:
 
         history = train_model(
             model, train, validation, epochs=2, device=torch.device("cpu"),
-            model_name="tiny", checkpoint_dir=tmp_path, verbose=False,
+            model_name="tiny", checkpoint_dir=tmp_path, log_dir=tmp_path, verbose=False,
         )
 
         record = history.to_dict()["epochs"][0]
@@ -59,13 +59,13 @@ class TestTrainingHistory:
         ):
             assert key in record, f"Section 20 requires {key} recorded"
 
-    def test_records_loss_components_separately(self):
+    def test_records_loss_components_separately(self, tmp_path):
         """The sum hides a stalled Dice term under a falling CE term."""
         train, validation = loaders()
         history = train_model(
             UNet(NUM_CLASSES, base=4), train, validation, epochs=1,
             device=torch.device("cpu"), verbose=False,
-            checkpoint_dir=__import__("pathlib").Path("/tmp/seg_test_ckpt"),
+            checkpoint_dir=tmp_path, log_dir=tmp_path,
         )
         record = history.to_dict()["epochs"][0]
         assert "train_cross_entropy" in record
@@ -75,7 +75,7 @@ class TestTrainingHistory:
         train, validation = loaders()
         history = train_model(
             UNet(NUM_CLASSES, base=4), train, validation, epochs=3,
-            device=torch.device("cpu"), checkpoint_dir=tmp_path, verbose=False,
+            device=torch.device("cpu"), checkpoint_dir=tmp_path, log_dir=tmp_path, verbose=False,
         )
         summary = history.to_dict()
         assert summary["completed_epochs"] == 3
@@ -104,7 +104,7 @@ class TestCheckpointSelection:
         history = train_model(
             UNet(NUM_CLASSES, base=4), train, validation, epochs=2,
             device=torch.device("cpu"), model_name="tiny",
-            checkpoint_dir=tmp_path, verbose=False,
+            checkpoint_dir=tmp_path, log_dir=tmp_path, verbose=False,
         )
         assert history.to_dict()["selection_metric"] == "val_mean_iou"
 
@@ -116,7 +116,7 @@ class TestCheckpointSelection:
         history = train_model(
             UNet(NUM_CLASSES, base=4), train, validation, epochs=2,
             device=torch.device("cpu"), model_name="tiny",
-            checkpoint_dir=tmp_path, verbose=False,
+            checkpoint_dir=tmp_path, log_dir=tmp_path, verbose=False,
         )
 
         assert history.best_epoch is not None
@@ -129,7 +129,7 @@ class TestCheckpointSelection:
         train_model(
             UNet(NUM_CLASSES, base=4), train, validation, epochs=1,
             device=torch.device("cpu"), model_name="tiny",
-            checkpoint_dir=tmp_path, verbose=False,
+            checkpoint_dir=tmp_path, log_dir=tmp_path, verbose=False,
         )
 
         state = torch.load(tmp_path / "best_tiny.pt", weights_only=True)
@@ -141,7 +141,7 @@ class TestCheckpointSelection:
         model = UNet(NUM_CLASSES, base=4)
         history = train_model(
             model, train, validation, epochs=2, device=torch.device("cpu"),
-            model_name="tiny", checkpoint_dir=tmp_path, verbose=False,
+            model_name="tiny", checkpoint_dir=tmp_path, log_dir=tmp_path, verbose=False,
         )
 
         saved = torch.load(tmp_path / "best_tiny.pt", weights_only=True)

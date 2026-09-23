@@ -19,6 +19,13 @@ data/annotations/*.json
 data/annotations/*.zip
 !data/split_manifest.json
 
+# Training histories are written by every run, including the short smoke
+# runs used while developing. Ten one-epoch histories from a 48-image
+# sanity check were committed once and read exactly like real results, so
+# they are ignored by default and the genuine benchmark histories are
+# added deliberately with `git add -f logs/` once the full run completes.
+logs/*.json
+
 # Trained weights. Section 59 asks that checkpoint access be documented
 # instead; the README says where they are.
 checkpoints/

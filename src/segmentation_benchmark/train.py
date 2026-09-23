@@ -144,7 +144,8 @@ class TrainingHistory:
 def train_model(model, train_loader, val_loader, optimizer=None,
                 epochs: int = EPOCHS, device=None, model_name: str = "model",
                 criterion=None, aux_weight: float = 0.4,
-                checkpoint_dir=None, verbose: bool = True) -> TrainingHistory:
+                checkpoint_dir=None, log_dir=None,
+                verbose: bool = True) -> TrainingHistory:
     """Train a semantic model, selecting the checkpoint by validation mIoU.
 
     Section 21 requires semantic checkpoints to be selected by validation
@@ -166,6 +167,7 @@ def train_model(model, train_loader, val_loader, optimizer=None,
     checkpoint_dir = checkpoint_dir or CHECKPOINTS_DIR
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     checkpoint_path = checkpoint_dir / f"best_{model_name}.pt"
+    log_path = (log_dir or LOGS_DIR) / f"{model_name}_history.json"
 
     history = TrainingHistory(model_name, "semantic")
     history.best_metric = "val_mean_iou"
@@ -256,7 +258,7 @@ def train_model(model, train_loader, val_loader, optimizer=None,
             # architecture.
             torch.save(best_state, checkpoint_path)
 
-        history.save()
+        history.save(log_path)
 
         if verbose:
             print(
@@ -300,7 +302,8 @@ def _validation_loss(model, loader, device, criterion) -> float:
 def train_instance_model(model, train_loader, val_loader, optimizer=None,
                          epochs: int = EPOCHS, device=None,
                          model_name: str = "maskrcnn", checkpoint_dir=None,
-                         evaluator=None, verbose: bool = True) -> TrainingHistory:
+                         log_dir=None, evaluator=None,
+                         verbose: bool = True) -> TrainingHistory:
     """Train Mask R-CNN, selecting the checkpoint by validation mask AP.
 
     Section 17 says instance models keep their own loss, and Mask R-CNN's is
@@ -322,6 +325,7 @@ def train_instance_model(model, train_loader, val_loader, optimizer=None,
     checkpoint_dir = checkpoint_dir or CHECKPOINTS_DIR
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     checkpoint_path = checkpoint_dir / f"best_{model_name}.pt"
+    log_path = (log_dir or LOGS_DIR) / f"{model_name}_history.json"
 
     history = TrainingHistory(model_name, "instance")
     history.best_metric = "val_mask_ap" if evaluator else "train_total_loss"
@@ -406,7 +410,7 @@ def train_instance_model(model, train_loader, val_loader, optimizer=None,
             best_state = copy.deepcopy(model.state_dict())
             torch.save(best_state, checkpoint_path)
 
-        history.save()
+        history.save(log_path)
 
         if verbose:
             components = "  ".join(
