@@ -551,6 +551,7 @@ def build(data: dict = None) -> str:
     lines += report_analysis.section_efficiency(data)
     lines += report_analysis.section_tradeoffs(data)
     lines += report_analysis.section_convergence(data)
+    lines += report_analysis.section_qualitative(data)
     lines += report_discussion.section_evolution()
     lines += report_discussion.section_discussion(data)
     lines += report_discussion.section_deployment(data)

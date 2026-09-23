@@ -142,6 +142,18 @@ def run_semantic(model_name: str, epochs: int = EPOCHS,
         json.dumps({"model": model_name, "matrix": matrix.to_list()}, indent=2)
     )
 
+    # Section 52: example predictions on the same test images for every
+    # model, so the panels can be read side by side.
+    from . import visualize
+    if verbose:
+        print("  saving prediction examples")
+    predictions = visualize.save_semantic_predictions(
+        model, test_loader, device, model_name, count=8, normalized=True
+    )
+    closeup = visualize.save_boundary_closeup(
+        model, test_loader, device, model_name, normalized=True
+    )
+
     checkpoint = CHECKPOINTS_DIR / f"best_{model_name}.pt"
     efficiency = profile_model(
         model, model_name, device, checkpoint_path=checkpoint,
@@ -167,6 +179,8 @@ def run_semantic(model_name: str, epochs: int = EPOCHS,
         "training": training,
         "test": test_metrics,
         "efficiency": efficiency,
+        "predictions": predictions,
+        "boundary_closeup": closeup,
     }
     save_json(payload, RAW_DIR / f"{model_name}.json")
     return payload
@@ -220,6 +234,13 @@ def run_instance(model_name: str = "maskrcnn", epochs: int = EPOCHS,
         print("  evaluating on the held-out test split")
     test_metrics = evaluate_instance(model, test_loader, device, split="test")
 
+    from . import visualize
+    if verbose:
+        print("  saving prediction examples")
+    predictions = visualize.save_instance_predictions(
+        model, test_loader, device, model_name, count=6
+    )
+
     checkpoint = CHECKPOINTS_DIR / f"best_{model_name}.pt"
     efficiency = profile_model(
         model, model_name, device, checkpoint_path=checkpoint,
@@ -254,6 +275,7 @@ def run_instance(model_name: str = "maskrcnn", epochs: int = EPOCHS,
         "training": training,
         "test": test_metrics,
         "efficiency": efficiency,
+        "predictions": predictions,
     }
     save_json(payload, RAW_DIR / f"{model_name}.json")
     return payload
@@ -454,6 +476,18 @@ def run_traditional(input_size: int = INPUT_SIZE, fit_images: int = 300,
     CHECKPOINTS_DIR.mkdir(parents=True, exist_ok=True)
     segmenter.save(mapping_path)
 
+    # Section 10 asks for a qualitative comparison specifically, because
+    # cluster IDs are not class labels. The figures show the raw clusters
+    # beside the mapped prediction so what the method actually produces is
+    # visible before the frozen mapping is laid over it.
+    from . import visualize
+    if verbose:
+        print("  saving qualitative cluster figures")
+    example_images, example_masks = zip(*list(raw_pairs(test_set, 6)))
+    qualitative = visualize.save_kmeans_qualitative(
+        segmenter, example_images, example_masks, count=6
+    )
+
     import numpy as np
     mean_latency = float(np.mean(latencies)) * 1000
 
@@ -496,6 +530,7 @@ def run_traditional(input_size: int = INPUT_SIZE, fit_images: int = 300,
             "timed_region": "per-image K-Means fit and cluster labeling, on CPU",
             "environment": environment(),
         },
+        "predictions": qualitative,
     }
     save_json(payload, RAW_DIR / "kmeans.json")
     return payload

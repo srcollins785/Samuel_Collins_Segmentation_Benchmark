@@ -551,3 +551,88 @@ def section_convergence(data: dict) -> list:
             )
 
     return lines
+
+
+# ---------------------------------------------------------------------------
+# Section 52, 10, 24: what the numbers cannot show
+# ---------------------------------------------------------------------------
+
+def section_qualitative(data: dict) -> list:
+    """Example predictions, the K-Means clusters, and boundary close-ups."""
+    from pathlib import Path
+
+    lines = ["## Qualitative results", ""]
+    predictions_dir = Path(__file__).resolve().parent.parent / "predictions"
+
+    if not predictions_dir.is_dir():
+        return lines + ["_No prediction figures have been generated yet._", ""]
+
+    lines += _lead(
+        "Every model was rendered on the same test images in the same order. "
+        "A panel built from whichever images a model happened to do well on "
+        "is an advertisement rather than evidence, so the selection is the "
+        "first images the deterministic test loader returns and is identical "
+        "across models."
+    )
+
+    # Section 10: the traditional baseline, qualitatively.
+    kmeans_figure = predictions_dir / "kmeans" / "clusters_00.png"
+    if kmeans_figure.is_file():
+        lines += ["### What K-Means actually produces", ""]
+        lines.append(
+            f"![K-Means clusters against the class mapping]"
+            f"(../predictions/kmeans/clusters_00.png)\n"
+        )
+        lines += _lead(
+            "The third panel is the one Section 10 asks for. K-Means finds "
+            "coherent regions, and they are the wrong regions: horizontal "
+            "bands of water, wave and sky, split by color and lighting rather "
+            "than by object. The surfers - the only thing in the frame that "
+            "is a labeled class - are absorbed into whichever band they "
+            "overlap. After the frozen training-only mapping is applied, the "
+            "fourth panel is almost entirely background.\n\n"
+            "This is the difference between grouping pixels that *look* alike "
+            "and grouping pixels that *are* the same object. No amount of "
+            "tuning the clustering fixes it, because color similarity is not "
+            "a proxy for object identity - which is the reason the nine "
+            "learned models exist."
+        )
+
+    # Section 52: per-model predictions.
+    models = [
+        d.name for d in sorted(predictions_dir.iterdir())
+        if d.is_dir() and d.name != "kmeans"
+        and (d / "example_00.png").is_file()
+    ]
+    if models:
+        lines += ["### Predictions by model", ""]
+        for model in models:
+            lines.append(f"**{rd.name(model)}**")
+            lines.append("")
+            lines.append(
+                f"![{rd.name(model)} prediction]"
+                f"(../predictions/{model}/example_00.png)\n"
+            )
+
+    # Section 24: boundary close-ups.
+    closeups = [
+        d.name for d in sorted(predictions_dir.iterdir())
+        if d.is_dir() and (d / "boundary_closeup.png").is_file()
+    ]
+    if closeups:
+        lines += ["### Boundary detail", ""]
+        lines += _lead(
+            "Each close-up is cropped on the densest concentration of "
+            "disagreement between the prediction and the ground truth on that "
+            "image, not on a region chosen to flatter the model. These are "
+            "what the boundary F1 column summarizes."
+        )
+        for model in closeups:
+            lines.append(f"**{rd.name(model)}**")
+            lines.append("")
+            lines.append(
+                f"![{rd.name(model)} boundary detail]"
+                f"(../predictions/{model}/boundary_closeup.png)\n"
+            )
+
+    return lines
