@@ -22,6 +22,7 @@ everywhere it appears. It is sampled immediately after a forward pass, which
 is where the peak occurs.
 """
 
+import copy
 import json
 import platform
 import time
@@ -99,7 +100,20 @@ def complexity(model, input_size: int = INPUT_SIZE) -> dict:
     account for, so an underestimate is visible rather than silent.
     """
     example = torch.randn(1, 3, input_size, input_size)
-    model = model.eval().cpu()
+
+    # Profile a copy, never the caller's model.
+    #
+    # thop registers float64 `total_ops` and `total_params` buffers on every
+    # submodule and does not remove them. On CUDA that is merely untidy; on
+    # Metal it is fatal, because MPS has no float64 and the next `.to(device)`
+    # raises. SegNet hit exactly this: fvcore cannot trace its max_unpool2d,
+    # so the thop fallback ran, and the model became unmovable *after* 25
+    # epochs of training had already completed.
+    #
+    # Copying is the general fix rather than un-registering thop's buffers by
+    # name, because it contains any side effect a profiler has, including ones
+    # a future version might add.
+    model = copy.deepcopy(model).eval().cpu()
 
     try:
         from fvcore.nn import FlopCountAnalysis
@@ -292,6 +306,10 @@ def profile_model(model, model_name: str, device, checkpoint_path=None,
         "excluding optimizer state"
     )
 
+    # Measurement must not be able to destroy a completed run. Everything
+    # below this point is a number that would be nice to have; the training
+    # that produced the model has already happened and its result is not
+    # worth losing to a profiler.
     if measure_complexity and not instance:
         # Detection models take a list of tensors and return different types
         # by mode, which fvcore's tracer cannot follow. Reported as not

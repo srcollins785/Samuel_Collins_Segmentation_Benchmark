@@ -237,3 +237,37 @@ class TestMeasurement:
         assert described["initialization"]
         assert described["total_parameters"] > 0
         assert described["weight_size_mb"] > 0
+
+
+class TestProfilerDoesNotMutate:
+    """Regression: a profiler must not break the model it measured.
+
+    thop registers float64 `total_ops` and `total_params` buffers on every
+    submodule and never removes them. On Metal the next `.to(device)` then
+    raises, because MPS has no float64 — which killed SegNet *after* 25
+    epochs of training had completed, since fvcore cannot trace its
+    max_unpool2d and the thop fallback ran.
+    """
+
+    def test_complexity_leaves_the_model_unchanged(self):
+        from segmentation_benchmark.efficiency import complexity
+
+        model = SegNet(NUM_CLASSES, pretrained=False)
+        before = {name: buffer.dtype for name, buffer in model.named_buffers()}
+
+        complexity(model, input_size=64)
+
+        after = {name: buffer.dtype for name, buffer in model.named_buffers()}
+        assert after == before, "profiling added or changed a buffer"
+
+    def test_model_is_still_movable_after_profiling(self):
+        from segmentation_benchmark.efficiency import complexity
+
+        model = SegNet(NUM_CLASSES, pretrained=False)
+        complexity(model, input_size=64)
+
+        # float64 is what breaks the move to MPS; assert the property
+        # directly so the test is meaningful on machines without Metal.
+        assert not any(
+            buffer.dtype == torch.float64 for buffer in model.buffers()
+        ), "profiling left a float64 buffer, which MPS cannot hold"

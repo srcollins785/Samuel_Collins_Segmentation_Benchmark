@@ -528,6 +528,32 @@ def section_convergence(data: dict) -> list:
             f"{int(fastest['epochs_to_90pct'])}."
         )
 
+    # A model whose selected checkpoint is its final epoch never stopped
+    # improving, so its score is a floor rather than a ceiling. This is not a
+    # detail: it changes what the pretrained-vs-scratch gap means.
+    still_improving = []
+    for model, payload in data["raw"].items():
+        training = payload.get("training", {})
+        best = training.get("best_epoch")
+        completed = training.get("completed_epochs")
+        if best and completed and best == completed:
+            still_improving.append((model, best))
+
+    if still_improving:
+        names = ", ".join(rd.name(m) for m, _ in sorted(still_improving))
+        lines += _lead(
+            f"**{names} selected the final epoch as the best one**, which "
+            "means validation mIoU was still rising when the 25-epoch budget "
+            "ran out. Those scores are a floor, not a ceiling, and the honest "
+            "reading of the gap between them and the pretrained models is "
+            "that it combines two causes: the pretrained models start from "
+            "better features, *and* the from-scratch models had not finished "
+            "learning. A longer budget would narrow the gap by some unknown "
+            "amount. Section 13 sets 25 epochs as a minimum rather than a "
+            "sufficient number, and for the randomly initialized models on "
+            "5,000 images it was evidently the former."
+        )
+
     overfit = rd.numeric(frame, "val_loss_rise")
     if not overfit.empty:
         worst = overfit.loc[overfit["val_loss_rise"].idxmax()]

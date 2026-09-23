@@ -70,3 +70,491 @@ Notes:
 - UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
 - MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
   training segformer for 25 epochs at 256px
+  epoch  1/25  loss 0.4967  val_loss 0.3125  val_mIoU 0.4927  val_Dice 0.6165  44.1s  *
+  epoch  2/25  loss 0.3210  val_loss 0.2876  val_mIoU 0.5425  val_Dice 0.6712  38.0s  *
+  epoch  3/25  loss 0.2915  val_loss 0.2877  val_mIoU 0.5149  val_Dice 0.6489  43.0s
+  epoch  4/25  loss 0.2769  val_loss 0.2657  val_mIoU 0.5648  val_Dice 0.6967  46.9s  *
+  epoch  5/25  loss 0.2627  val_loss 0.2793  val_mIoU 0.5506  val_Dice 0.6807  39.9s
+  epoch  6/25  loss 0.2562  val_loss 0.2603  val_mIoU 0.5616  val_Dice 0.6875  38.7s
+  epoch  7/25  loss 0.2467  val_loss 0.2580  val_mIoU 0.5729  val_Dice 0.7062  38.6s  *
+  epoch  8/25  loss 0.2436  val_loss 0.2682  val_mIoU 0.5392  val_Dice 0.6760  38.0s
+  epoch  9/25  loss 0.2303  val_loss 0.2738  val_mIoU 0.5469  val_Dice 0.6811  38.1s
+  epoch 10/25  loss 0.2290  val_loss 0.2615  val_mIoU 0.5752  val_Dice 0.7055  45.0s  *
+  epoch 11/25  loss 0.2243  val_loss 0.2636  val_mIoU 0.5678  val_Dice 0.6961  37.8s
+  epoch 12/25  loss 0.2234  val_loss 0.2698  val_mIoU 0.5529  val_Dice 0.6832  38.0s
+  epoch 13/25  loss 0.2161  val_loss 0.2689  val_mIoU 0.5757  val_Dice 0.6983  39.6s  *
+  epoch 14/25  loss 0.2078  val_loss 0.2698  val_mIoU 0.5912  val_Dice 0.7195  37.7s  *
+  epoch 15/25  loss 0.2118  val_loss 0.2572  val_mIoU 0.5945  val_Dice 0.7236  37.7s  *
+  epoch 16/25  loss 0.2074  val_loss 0.2759  val_mIoU 0.5626  val_Dice 0.6978  37.2s
+  epoch 17/25  loss 0.2031  val_loss 0.2644  val_mIoU 0.5961  val_Dice 0.7270  37.3s  *
+  epoch 18/25  loss 0.1996  val_loss 0.2554  val_mIoU 0.6073  val_Dice 0.7330  37.2s  *
+  epoch 19/25  loss 0.2027  val_loss 0.2658  val_mIoU 0.5953  val_Dice 0.7234  36.9s
+  epoch 20/25  loss 0.1953  val_loss 0.2598  val_mIoU 0.5900  val_Dice 0.7197  36.7s
+  epoch 21/25  loss 0.1987  val_loss 0.2712  val_mIoU 0.5590  val_Dice 0.6889  37.1s
+  epoch 22/25  loss 0.2005  val_loss 0.2636  val_mIoU 0.5747  val_Dice 0.7059  37.0s
+  epoch 23/25  loss 0.1852  val_loss 0.2603  val_mIoU 0.6052  val_Dice 0.7330  37.1s
+  epoch 24/25  loss 0.1949  val_loss 0.2968  val_mIoU 0.5094  val_Dice 0.6411  36.9s
+  epoch 25/25  loss 0.1902  val_loss 0.2692  val_mIoU 0.5693  val_Dice 0.6998  37.0s
+  evaluating on the held-out test split
+/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  done in 20.1 min
+
+
+Building tables
+  semantic_segmentation_results.csv             2 rows
+  instance_segmentation_results.csv             0 rows
+  segmentation_efficiency_results.csv           2 rows
+  per_class_iou.csv                             6 rows
+  per_class_boundary_f1.csv                     6 rows
+  training_history.csv                         25 rows
+Building figures
+  miou_comparison                            miou_comparison.png
+  dice_comparison                            dice_comparison.png
+  parameters                                 parameters.png
+  model_size                                 model_size.png
+  training_time                              training_time.png
+  inference_speed                            inference_speed.png
+  miou_vs_parameters                         miou_vs_parameters.png
+  miou_vs_latency                            miou_vs_latency.png
+  per_class_iou                              per_class_iou.png
+  boundary_f1                                boundary_f1.png
+
+================================================================
+Completed 1/1 in 20.1 min
+==============================================================
+=== fcn_resnet50  (22:08:57)
+==============================================================
+Split checksum : a61d376d4a98c607
+Split sizes    : {'train': 5000, 'val': 1000, 'test': 1000}
+Device         : mps
+Input size     : 256x256
+
+Running 1 model(s): fcn_resnet50
+Protocol: 25 epochs, batch 8, 256px
+
+[1/1] fcn_resnet50
+  training fcn_resnet50 for 25 epochs at 256px
+  epoch  1/25  loss 0.4166  val_loss 0.3183  val_mIoU 0.4775  val_Dice 0.6156  125.5s  *
+  epoch  2/25  loss 0.3081  val_loss 0.2879  val_mIoU 0.4991  val_Dice 0.6302  134.8s  *
+  epoch  3/25  loss 0.2819  val_loss 0.2718  val_mIoU 0.4979  val_Dice 0.6263  131.6s
+  epoch  4/25  loss 0.2624  val_loss 0.2721  val_mIoU 0.4781  val_Dice 0.6099  132.6s
+  epoch  5/25  loss 0.2573  val_loss 0.2753  val_mIoU 0.4817  val_Dice 0.6148  132.8s
+  epoch  6/25  loss 0.2427  val_loss 0.2593  val_mIoU 0.5101  val_Dice 0.6392  133.6s  *
+  epoch  7/25  loss 0.2367  val_loss 0.2690  val_mIoU 0.4897  val_Dice 0.6203  134.1s
+  epoch  8/25  loss 0.2229  val_loss 0.2635  val_mIoU 0.5295  val_Dice 0.6625  136.5s  *
+  epoch  9/25  loss 0.2103  val_loss 0.2834  val_mIoU 0.4901  val_Dice 0.6191  136.4s
+  epoch 10/25  loss 0.2133  val_loss 0.2684  val_mIoU 0.5171  val_Dice 0.6523  137.2s
+  epoch 11/25  loss 0.2062  val_loss 0.2645  val_mIoU 0.5356  val_Dice 0.6665  133.7s  *
+  epoch 12/25  loss 0.2004  val_loss 0.2793  val_mIoU 0.5171  val_Dice 0.6467  133.3s
+  epoch 13/25  loss 0.1938  val_loss 0.2670  val_mIoU 0.5324  val_Dice 0.6629  133.3s
+  epoch 14/25  loss 0.1912  val_loss 0.2645  val_mIoU 0.5332  val_Dice 0.6606  135.3s
+  epoch 15/25  loss 0.1874  val_loss 0.2786  val_mIoU 0.5014  val_Dice 0.6276  144.5s
+  epoch 16/25  loss 0.1872  val_loss 0.2783  val_mIoU 0.5112  val_Dice 0.6453  138.2s
+  epoch 17/25  loss 0.1836  val_loss 0.2573  val_mIoU 0.5531  val_Dice 0.6792  134.1s  *
+  epoch 18/25  loss 0.1737  val_loss 0.2783  val_mIoU 0.5225  val_Dice 0.6510  134.0s
+  epoch 19/25  loss 0.1724  val_loss 0.2774  val_mIoU 0.5059  val_Dice 0.6340  136.5s
+  epoch 20/25  loss 0.1723  val_loss 0.2727  val_mIoU 0.5185  val_Dice 0.6487  133.8s
+  epoch 21/25  loss 0.1679  val_loss 0.2652  val_mIoU 0.5605  val_Dice 0.6915  134.5s  *
+  epoch 22/25  loss 0.1678  val_loss 0.2634  val_mIoU 0.5434  val_Dice 0.6744  133.6s
+  epoch 23/25  loss 0.1706  val_loss 0.2694  val_mIoU 0.5334  val_Dice 0.6592  134.4s
+  epoch 24/25  loss 0.1687  val_loss 0.2728  val_mIoU 0.5227  val_Dice 0.6519  136.3s
+  epoch 25/25  loss 0.1583  val_loss 0.2682  val_mIoU 0.5494  val_Dice 0.6812  133.3s
+  evaluating on the held-out test split
+/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  saving prediction examples
+  done in 65.5 min
+
+
+Building tables
+  semantic_segmentation_results.csv             3 rows
+  instance_segmentation_results.csv             0 rows
+  segmentation_efficiency_results.csv           3 rows
+  per_class_iou.csv                             6 rows
+  per_class_boundary_f1.csv                     6 rows
+  training_history.csv                         50 rows
+Building figures
+  miou_comparison                            miou_comparison.png
+  dice_comparison                            dice_comparison.png
+  parameters                                 parameters.png
+  model_size                                 model_size.png
+  training_time                              training_time.png
+  inference_speed                            inference_speed.png
+  miou_vs_parameters                         miou_vs_parameters.png
+  miou_vs_latency                            miou_vs_latency.png
+  per_class_iou                              per_class_iou.png
+  boundary_f1                                boundary_f1.png
+
+================================================================
+Completed 1/1 in 65.5 min
+==============================================================
+=== segnet  (23:14:29)
+==============================================================
+Split checksum : a61d376d4a98c607
+Split sizes    : {'train': 5000, 'val': 1000, 'test': 1000}
+Device         : mps
+Input size     : 256x256
+
+Running 1 model(s): segnet
+Protocol: 25 epochs, batch 8, 256px
+
+[1/1] segnet
+  training segnet for 25 epochs at 256px
+  epoch  1/25  loss 0.6342  val_loss 0.4291  val_mIoU 0.3324  val_Dice 0.3902  129.1s  *
+  epoch  2/25  loss 0.4196  val_loss 0.3536  val_mIoU 0.3740  val_Dice 0.4517  134.6s  *
+  epoch  3/25  loss 0.3667  val_loss 0.3436  val_mIoU 0.3574  val_Dice 0.4351  136.0s
+  epoch  4/25  loss 0.3340  val_loss 0.3254  val_mIoU 0.3757  val_Dice 0.4669  136.8s  *
+  epoch  5/25  loss 0.3224  val_loss 0.3081  val_mIoU 0.4045  val_Dice 0.5013  137.0s  *
+  epoch  6/25  loss 0.3088  val_loss 0.3063  val_mIoU 0.4293  val_Dice 0.5341  136.4s  *
+  epoch  7/25  loss 0.2983  val_loss 0.2774  val_mIoU 0.4804  val_Dice 0.5876  136.2s  *
+  epoch  8/25  loss 0.2756  val_loss 0.2854  val_mIoU 0.4646  val_Dice 0.5886  136.8s
+  epoch  9/25  loss 0.2651  val_loss 0.2922  val_mIoU 0.4413  val_Dice 0.5624  140.5s
+  epoch 10/25  loss 0.2613  val_loss 0.2933  val_mIoU 0.4888  val_Dice 0.6164  140.4s  *
+  epoch 11/25  loss 0.2530  val_loss 0.2773  val_mIoU 0.5018  val_Dice 0.6258  147.6s  *
+  epoch 12/25  loss 0.2467  val_loss 0.2769  val_mIoU 0.4905  val_Dice 0.6161  144.3s
+  epoch 13/25  loss 0.2399  val_loss 0.2717  val_mIoU 0.5048  val_Dice 0.6368  152.8s  *
+  epoch 14/25  loss 0.2369  val_loss 0.2867  val_mIoU 0.4576  val_Dice 0.5777  149.4s
+  epoch 15/25  loss 0.2300  val_loss 0.2883  val_mIoU 0.5088  val_Dice 0.6393  146.8s  *
+  epoch 16/25  loss 0.2259  val_loss 0.2693  val_mIoU 0.5200  val_Dice 0.6484  153.4s  *
+  epoch 17/25  loss 0.2186  val_loss 0.2827  val_mIoU 0.5212  val_Dice 0.6506  148.6s  *
+  epoch 18/25  loss 0.2125  val_loss 0.2782  val_mIoU 0.5124  val_Dice 0.6380  139.8s
+  epoch 19/25  loss 0.2096  val_loss 0.2960  val_mIoU 0.4945  val_Dice 0.6263  138.4s
+  epoch 20/25  loss 0.2115  val_loss 0.2841  val_mIoU 0.5131  val_Dice 0.6417  138.3s
+  epoch 21/25  loss 0.2082  val_loss 0.2845  val_mIoU 0.5158  val_Dice 0.6452  139.3s
+  epoch 22/25  loss 0.2016  val_loss 0.2981  val_mIoU 0.4792  val_Dice 0.6073  143.8s
+  epoch 23/25  loss 0.2107  val_loss 0.2911  val_mIoU 0.4912  val_Dice 0.6146  141.8s
+  epoch 24/25  loss 0.2035  val_loss 0.2779  val_mIoU 0.5047  val_Dice 0.6301  141.4s
+  epoch 25/25  loss 0.1893  val_loss 0.2963  val_mIoU 0.4828  val_Dice 0.6103  142.4s
+  evaluating on the held-out test split
+/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/run_benchmark.py", line 208, in main
+    run_one(name, args, device)
+  File "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/run_benchmark.py", line 110, in run_one
+    return benchmark.run_semantic(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/src/segmentation_benchmark/benchmark.py", line 158, in run_semantic
+    efficiency = profile_model(
+                 ^^^^^^^^^^^^^^
+  File "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/src/segmentation_benchmark/efficiency.py", line 312, in profile_model
+    model = model.to(device)
+            ^^^^^^^^^^^^^^^^
+  File "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1388, in to
+    return self._apply(convert)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+  File "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1036, in _apply
+    self._buffers[key] = fn(buf)
+                         ^^^^^^^
+  File "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1374, in convert
+    return t.to(
+           ^^^^^
+TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.
+  saving prediction examples
+  FAILED TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.
+
+
+Building tables
+  semantic_segmentation_results.csv             3 rows
+  instance_segmentation_results.csv             0 rows
+  segmentation_efficiency_results.csv           3 rows
+  per_class_iou.csv                             6 rows
+  per_class_boundary_f1.csv                     6 rows
+  training_history.csv                         50 rows
+Building figures
+  miou_comparison                            miou_comparison.png
+  dice_comparison                            dice_comparison.png
+  parameters                                 parameters.png
+  model_size                                 model_size.png
+  training_time                              training_time.png
+  inference_speed                            inference_speed.png
+  miou_vs_parameters                         miou_vs_parameters.png
+  miou_vs_latency                            miou_vs_latency.png
+  per_class_iou                              per_class_iou.png
+  boundary_f1                                boundary_f1.png
+
+================================================================
+Completed 0/1 in 67.9 min
+
+1 model(s) failed and are absent from the tables:
+  segnet: TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.
+==============================================================
+=== deeplabv3  (00:22:22)
+==============================================================
+Split checksum : a61d376d4a98c607
+Split sizes    : {'train': 5000, 'val': 1000, 'test': 1000}
+Device         : mps
+Input size     : 256x256
+
+Running 1 model(s): deeplabv3
+Protocol: 25 epochs, batch 8, 256px
+
+[1/1] deeplabv3
+  training deeplabv3 for 25 epochs at 256px
+  epoch  1/25  loss 0.4708  val_loss 0.3219  val_mIoU 0.4768  val_Dice 0.6125  158.9s  *
+  epoch  2/25  loss 0.3188  val_loss 0.3017  val_mIoU 0.4729  val_Dice 0.6021  172.6s
+  epoch  3/25  loss 0.2910  val_loss 0.2870  val_mIoU 0.4461  val_Dice 0.5641  171.0s
+  epoch  4/25  loss 0.2727  val_loss 0.2999  val_mIoU 0.4699  val_Dice 0.5958  168.8s
+  epoch  5/25  loss 0.2554  val_loss 0.2780  val_mIoU 0.5200  val_Dice 0.6536  165.4s  *
+  epoch  6/25  loss 0.2467  val_loss 0.3014  val_mIoU 0.4687  val_Dice 0.5852  164.7s
+  epoch  7/25  loss 0.2397  val_loss 0.2651  val_mIoU 0.5255  val_Dice 0.6520  163.9s  *
+  epoch  8/25  loss 0.2303  val_loss 0.2630  val_mIoU 0.5323  val_Dice 0.6646  167.1s  *
+  epoch  9/25  loss 0.2177  val_loss 0.2630  val_mIoU 0.5545  val_Dice 0.6830  166.0s  *
+  epoch 10/25  loss 0.2094  val_loss 0.2961  val_mIoU 0.4885  val_Dice 0.6216  163.9s
+  epoch 11/25  loss 0.2174  val_loss 0.2587  val_mIoU 0.5363  val_Dice 0.6655  164.9s
+  epoch 12/25  loss 0.2062  val_loss 0.2720  val_mIoU 0.5058  val_Dice 0.6368  163.9s
+  epoch 13/25  loss 0.2021  val_loss 0.2524  val_mIoU 0.5605  val_Dice 0.6870  163.2s  *
+  epoch 14/25  loss 0.1913  val_loss 0.2761  val_mIoU 0.5074  val_Dice 0.6285  162.6s
+  epoch 15/25  loss 0.1874  val_loss 0.2580  val_mIoU 0.5467  val_Dice 0.6785  163.2s
+  epoch 16/25  loss 0.1897  val_loss 0.2617  val_mIoU 0.5493  val_Dice 0.6760  163.1s
+  epoch 17/25  loss 0.1804  val_loss 0.2902  val_mIoU 0.5044  val_Dice 0.6392  163.4s
+  epoch 18/25  loss 0.1850  val_loss 0.2715  val_mIoU 0.5354  val_Dice 0.6580  162.8s
+  epoch 19/25  loss 0.1805  val_loss 0.2753  val_mIoU 0.5333  val_Dice 0.6609  163.2s
+  epoch 20/25  loss 0.1768  val_loss 0.2689  val_mIoU 0.5261  val_Dice 0.6597  162.6s
+  epoch 21/25  loss 0.1719  val_loss 0.2566  val_mIoU 0.5647  val_Dice 0.6919  162.8s  *
+  epoch 22/25  loss 0.1713  val_loss 0.2629  val_mIoU 0.5382  val_Dice 0.6654  162.4s
+  epoch 23/25  loss 0.1708  val_loss 0.2566  val_mIoU 0.5456  val_Dice 0.6695  162.3s
+  epoch 24/25  loss 0.1690  val_loss 0.2661  val_mIoU 0.5330  val_Dice 0.6612  162.3s
+  epoch 25/25  loss 0.1705  val_loss 0.2723  val_mIoU 0.5462  val_Dice 0.6772  162.5s
+  evaluating on the held-out test split
+/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  saving prediction examples
+  done in 80.0 min
+
+
+Building tables
+  semantic_segmentation_results.csv             4 rows
+  instance_segmentation_results.csv             0 rows
+  segmentation_efficiency_results.csv           4 rows
+  per_class_iou.csv                             6 rows
+  per_class_boundary_f1.csv                     6 rows
+  training_history.csv                         75 rows
+Building figures
+  miou_comparison                            miou_comparison.png
+  dice_comparison                            dice_comparison.png
+  parameters                                 parameters.png
+  model_size                                 model_size.png
+  training_time                              training_time.png
+  inference_speed                            inference_speed.png
+  miou_vs_parameters                         miou_vs_parameters.png
+  miou_vs_latency                            miou_vs_latency.png
+  per_class_iou                              per_class_iou.png
+  boundary_f1                                boundary_f1.png
+
+================================================================
+Completed 1/1 in 80.0 min
+==============================================================
+=== pspnet  (01:42:23)
+==============================================================
+Split checksum : a61d376d4a98c607
+Split sizes    : {'train': 5000, 'val': 1000, 'test': 1000}
+Device         : mps
+Input size     : 256x256
+
+Running 1 model(s): pspnet
+Protocol: 25 epochs, batch 8, 256px
+
+[1/1] pspnet
+  training pspnet for 25 epochs at 256px
+  epoch  1/25  loss 0.5201  val_loss 0.2537  val_mIoU 0.5997  val_Dice 0.7230  168.4s  *
+  epoch  2/25  loss 0.3634  val_loss 0.2324  val_mIoU 0.6168  val_Dice 0.7413  182.1s  *
+  epoch  3/25  loss 0.3251  val_loss 0.2393  val_mIoU 0.5908  val_Dice 0.7148  180.5s
+  epoch  4/25  loss 0.2953  val_loss 0.2144  val_mIoU 0.6259  val_Dice 0.7426  177.3s  *
+  epoch  5/25  loss 0.2779  val_loss 0.2203  val_mIoU 0.6292  val_Dice 0.7506  177.2s  *
+  epoch  6/25  loss 0.2691  val_loss 0.2274  val_mIoU 0.6110  val_Dice 0.7265  176.4s
+  epoch  7/25  loss 0.2474  val_loss 0.2235  val_mIoU 0.6108  val_Dice 0.7377  176.9s
+  epoch  8/25  loss 0.2467  val_loss 0.2344  val_mIoU 0.6164  val_Dice 0.7420  177.6s
+  epoch  9/25  loss 0.2321  val_loss 0.2336  val_mIoU 0.6226  val_Dice 0.7416  177.4s
+  epoch 10/25  loss 0.2269  val_loss 0.2239  val_mIoU 0.6271  val_Dice 0.7479  178.9s
+  epoch 11/25  loss 0.2204  val_loss 0.2315  val_mIoU 0.6195  val_Dice 0.7385  177.8s
+  epoch 12/25  loss 0.2209  val_loss 0.2429  val_mIoU 0.5979  val_Dice 0.7217  178.2s
+  epoch 13/25  loss 0.2101  val_loss 0.2255  val_mIoU 0.6357  val_Dice 0.7521  178.0s  *
+  epoch 14/25  loss 0.2029  val_loss 0.2265  val_mIoU 0.6128  val_Dice 0.7396  177.7s
+  epoch 15/25  loss 0.2015  val_loss 0.2379  val_mIoU 0.5820  val_Dice 0.7058  178.4s
+  epoch 16/25  loss 0.2029  val_loss 0.2285  val_mIoU 0.6158  val_Dice 0.7358  177.9s
+  epoch 17/25  loss 0.1892  val_loss 0.2308  val_mIoU 0.6168  val_Dice 0.7339  178.7s
+  epoch 18/25  loss 0.1807  val_loss 0.2228  val_mIoU 0.6277  val_Dice 0.7433  177.9s
+  epoch 19/25  loss 0.1840  val_loss 0.2278  val_mIoU 0.6230  val_Dice 0.7390  177.7s
+  epoch 20/25  loss 0.1837  val_loss 0.2363  val_mIoU 0.6050  val_Dice 0.7243  182.6s
+  epoch 21/25  loss 0.1808  val_loss 0.2366  val_mIoU 0.6240  val_Dice 0.7435  181.4s
+  epoch 22/25  loss 0.1741  val_loss 0.2314  val_mIoU 0.6231  val_Dice 0.7419  178.3s
+  epoch 23/25  loss 0.1747  val_loss 0.2210  val_mIoU 0.6289  val_Dice 0.7492  179.0s
+  epoch 24/25  loss 0.1675  val_loss 0.2411  val_mIoU 0.5988  val_Dice 0.7210  178.2s
+  epoch 25/25  loss 0.1673  val_loss 0.2328  val_mIoU 0.6134  val_Dice 0.7322  178.5s
+  evaluating on the held-out test split
+/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  saving prediction examples
+  done in 86.3 min
+
+
+Building tables
+  semantic_segmentation_results.csv             5 rows
+  instance_segmentation_results.csv             0 rows
+  segmentation_efficiency_results.csv           5 rows
+  per_class_iou.csv                             6 rows
+  per_class_boundary_f1.csv                     6 rows
+  training_history.csv                        100 rows
+Building figures
+  miou_comparison                            miou_comparison.png
+  dice_comparison                            dice_comparison.png
+  parameters                                 parameters.png
+  model_size                                 model_size.png
+  training_time                              training_time.png
+  inference_speed                            inference_speed.png
+  miou_vs_parameters                         miou_vs_parameters.png
+  miou_vs_latency                            miou_vs_latency.png
+  per_class_iou                              per_class_iou.png
+  boundary_f1                                boundary_f1.png
+
+================================================================
+Completed 1/1 in 86.3 min
+==============================================================
+=== unet  (03:08:44)
+==============================================================
+Split checksum : a61d376d4a98c607
+Split sizes    : {'train': 5000, 'val': 1000, 'test': 1000}
+Device         : mps
+Input size     : 256x256
+
+Running 1 model(s): unet
+Protocol: 25 epochs, batch 8, 256px
+
+[1/1] unet
+  training unet for 25 epochs at 256px
+  epoch  1/25  loss 0.7645  val_loss 0.6030  val_mIoU 0.1704  val_Dice 0.2035  166.1s  *
+  epoch  2/25  loss 0.5849  val_loss 0.5458  val_mIoU 0.1906  val_Dice 0.2294  176.9s  *
+  epoch  3/25  loss 0.5561  val_loss 0.5276  val_mIoU 0.1918  val_Dice 0.2299  174.8s  *
+  epoch  4/25  loss 0.5385  val_loss 0.5137  val_mIoU 0.2092  val_Dice 0.2497  174.7s  *
+  epoch  5/25  loss 0.5282  val_loss 0.5015  val_mIoU 0.1997  val_Dice 0.2383  174.1s
+  epoch  6/25  loss 0.5159  val_loss 0.4834  val_mIoU 0.2157  val_Dice 0.2551  173.5s  *
+  epoch  7/25  loss 0.5040  val_loss 0.4749  val_mIoU 0.2221  val_Dice 0.2737  174.0s  *
+  epoch  8/25  loss 0.4899  val_loss 0.4731  val_mIoU 0.2370  val_Dice 0.3015  173.8s  *
+  epoch  9/25  loss 0.4740  val_loss 0.4383  val_mIoU 0.2644  val_Dice 0.3315  173.5s  *
+  epoch 10/25  loss 0.4680  val_loss 0.4399  val_mIoU 0.2726  val_Dice 0.3452  173.5s  *
+  epoch 11/25  loss 0.4582  val_loss 0.4290  val_mIoU 0.2878  val_Dice 0.3719  173.6s  *
+  epoch 12/25  loss 0.4486  val_loss 0.4329  val_mIoU 0.2737  val_Dice 0.3499  174.2s
+  epoch 13/25  loss 0.4437  val_loss 0.4329  val_mIoU 0.2846  val_Dice 0.3596  177.8s
+  epoch 14/25  loss 0.4366  val_loss 0.4202  val_mIoU 0.2883  val_Dice 0.3636  176.6s  *
+  epoch 15/25  loss 0.4302  val_loss 0.4165  val_mIoU 0.2904  val_Dice 0.3692  174.5s  *
+  epoch 16/25  loss 0.4244  val_loss 0.3962  val_mIoU 0.3055  val_Dice 0.3919  174.4s  *
+  epoch 17/25  loss 0.4158  val_loss 0.3960  val_mIoU 0.3087  val_Dice 0.3976  174.3s  *
+  epoch 18/25  loss 0.4074  val_loss 0.4005  val_mIoU 0.3073  val_Dice 0.3891  175.0s
+  epoch 19/25  loss 0.4071  val_loss 0.4084  val_mIoU 0.3057  val_Dice 0.3931  175.5s
+  epoch 20/25  loss 0.3982  val_loss 0.3716  val_mIoU 0.3217  val_Dice 0.4035  175.5s  *
+  epoch 21/25  loss 0.3959  val_loss 0.3735  val_mIoU 0.3176  val_Dice 0.3956  175.2s
+  epoch 22/25  loss 0.3890  val_loss 0.3831  val_mIoU 0.3425  val_Dice 0.4392  174.9s  *
+  epoch 23/25  loss 0.3875  val_loss 0.3843  val_mIoU 0.3141  val_Dice 0.4044  176.3s
+  epoch 24/25  loss 0.3818  val_loss 0.3783  val_mIoU 0.3084  val_Dice 0.3893  178.7s
+  epoch 25/25  loss 0.3753  val_loss 0.3619  val_mIoU 0.3457  val_Dice 0.4419  176.7s  *
+  evaluating on the held-out test split
+/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  saving prediction examples
+  done in 84.1 min
+
+
+Building tables
+  semantic_segmentation_results.csv             6 rows
+  instance_segmentation_results.csv             0 rows
+  segmentation_efficiency_results.csv           6 rows
+  per_class_iou.csv                             6 rows
+  per_class_boundary_f1.csv                     6 rows
+  training_history.csv                        125 rows
+Building figures
+  miou_comparison                            miou_comparison.png
+  dice_comparison                            dice_comparison.png
+  parameters                                 parameters.png
+  model_size                                 model_size.png
+  training_time                              training_time.png
+  inference_speed                            inference_speed.png
+  miou_vs_parameters                         miou_vs_parameters.png
+  miou_vs_latency                            miou_vs_latency.png
+  per_class_iou                              per_class_iou.png
+  boundary_f1                                boundary_f1.png
+
+================================================================
+Completed 1/1 in 84.1 min
+==============================================================
+=== unetpp  (04:32:52)
+==============================================================
+Split checksum : a61d376d4a98c607
+Split sizes    : {'train': 5000, 'val': 1000, 'test': 1000}
+Device         : mps
+Input size     : 256x256
+
+Running 1 model(s): unetpp
+Protocol: 25 epochs, batch 8, 256px
+
+[1/1] unetpp
+  training unetpp for 25 epochs at 256px
+  epoch  1/25  loss 0.7595  val_loss 0.6034  val_mIoU 0.1702  val_Dice 0.2048  536.0s  *
+  epoch  2/25  loss 0.5855  val_loss 0.5384  val_mIoU 0.1996  val_Dice 0.2398  549.4s  *
+  epoch  3/25  loss 0.5536  val_loss 0.5203  val_mIoU 0.1979  val_Dice 0.2367  543.6s
+  epoch  4/25  loss 0.5352  val_loss 0.5079  val_mIoU 0.2109  val_Dice 0.2509  542.5s  *
+  epoch  5/25  loss 0.5235  val_loss 0.4922  val_mIoU 0.2039  val_Dice 0.2433  542.9s
+  epoch  6/25  loss 0.5101  val_loss 0.4737  val_mIoU 0.2308  val_Dice 0.2827  543.7s  *
+  epoch  7/25  loss 0.4971  val_loss 0.4648  val_mIoU 0.2367  val_Dice 0.2975  543.0s  *
+  epoch  8/25  loss 0.4839  val_loss 0.4595  val_mIoU 0.2485  val_Dice 0.3138  551.4s  *
+  epoch  9/25  loss 0.4689  val_loss 0.4347  val_mIoU 0.2748  val_Dice 0.3472  544.9s  *
+  epoch 10/25  loss 0.4631  val_loss 0.4316  val_mIoU 0.2690  val_Dice 0.3371  543.2s
+  epoch 11/25  loss 0.4520  val_loss 0.4430  val_mIoU 0.2823  val_Dice 0.3601  544.2s  *
+  epoch 12/25  loss 0.4448  val_loss 0.4399  val_mIoU 0.2775  val_Dice 0.3522  544.5s
+  epoch 13/25  loss 0.4384  val_loss 0.4154  val_mIoU 0.2900  val_Dice 0.3651  544.3s  *
+  epoch 14/25  loss 0.4314  val_loss 0.4276  val_mIoU 0.3013  val_Dice 0.3779  552.3s  *
+  epoch 15/25  loss 0.4249  val_loss 0.4162  val_mIoU 0.2804  val_Dice 0.3526  544.8s
+  epoch 16/25  loss 0.4188  val_loss 0.3857  val_mIoU 0.3115  val_Dice 0.3912  545.1s  *
+  epoch 17/25  loss 0.4102  val_loss 0.3844  val_mIoU 0.3142  val_Dice 0.3940  544.2s  *
+  epoch 18/25  loss 0.4030  val_loss 0.3953  val_mIoU 0.3157  val_Dice 0.3965  545.5s  *
+  epoch 19/25  loss 0.4030  val_loss 0.3929  val_mIoU 0.3177  val_Dice 0.4038  545.6s  *
+  epoch 20/25  loss 0.3913  val_loss 0.3893  val_mIoU 0.3127  val_Dice 0.3947  550.8s
+  epoch 21/25  loss 0.3889  val_loss 0.3682  val_mIoU 0.3254  val_Dice 0.4058  546.3s  *
+  epoch 22/25  loss 0.3837  val_loss 0.3781  val_mIoU 0.3432  val_Dice 0.4409  545.4s  *
+  epoch 23/25  loss 0.3848  val_loss 0.3798  val_mIoU 0.3312  val_Dice 0.4287  544.9s
+  epoch 24/25  loss 0.3750  val_loss 0.3658  val_mIoU 0.3321  val_Dice 0.4220  547.2s
+  epoch 25/25  loss 0.3702  val_loss 0.3630  val_mIoU 0.3503  val_Dice 0.4495  550.2s  *
+  evaluating on the held-out test split
+/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  saving prediction examples
+  done in 261.7 min
+
+
+Building tables
+  semantic_segmentation_results.csv             7 rows
+  instance_segmentation_results.csv             0 rows
+  segmentation_efficiency_results.csv           7 rows
+  per_class_iou.csv                             6 rows
+  per_class_boundary_f1.csv                     6 rows
+  training_history.csv                        150 rows
+Building figures
+  miou_comparison                            miou_comparison.png
+  dice_comparison                            dice_comparison.png
+  parameters                                 parameters.png
+  model_size                                 model_size.png
+  training_time                              training_time.png
+  inference_speed                            inference_speed.png
+  miou_vs_parameters                         miou_vs_parameters.png
+  miou_vs_latency                            miou_vs_latency.png
+  per_class_iou                              per_class_iou.png
+  boundary_f1                                boundary_f1.png
+
+================================================================
+Completed 1/1 in 261.7 min
+==============================================================
+=== maskrcnn  (08:54:39)
+==============================================================
+Split checksum : a61d376d4a98c607
+Split sizes    : {'train': 5000, 'val': 1000, 'test': 1000}
+Device         : mps
+Input size     : 256x256
+
+Running 1 model(s): maskrcnn
+Protocol: 25 epochs, batch 8, 256px
+
+[1/1] maskrcnn
+  training maskrcnn for 25 epochs at 256px
