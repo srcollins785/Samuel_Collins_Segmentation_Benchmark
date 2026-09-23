@@ -411,12 +411,24 @@ def section_efficiency(data: dict) -> list:
                        exclude=["kmeans"])
     fastest = rd.best(efficiency, "images_per_second", exclude=["kmeans"])
     if smallest is not None and fastest is not None:
+        if smallest["model"] == fastest["model"]:
+            headline = (
+                f"**{rd.name(smallest['model'])} is both the smallest network "
+                f"and the fastest**, at {rd.fmt(smallest['model_size_mb'], 1)} "
+                f"MiB and {rd.fmt(fastest['images_per_second'], 1)} images per "
+                "second. Those usually go together but need not: a model can "
+                "be small and slow if its layers are deep and narrow. "
+            )
+        else:
+            headline = (
+                f"**{rd.name(smallest['model'])} is the smallest network** at "
+                f"{rd.fmt(smallest['model_size_mb'], 1)} MiB, and "
+                f"**{rd.name(fastest['model'])} the fastest** at "
+                f"{rd.fmt(fastest['images_per_second'], 1)} images per second. "
+            )
         lines += _lead(
-            f"**{rd.name(smallest['model'])} is the smallest network** at "
-            f"{rd.fmt(smallest['model_size_mb'], 1)} MiB, and "
-            f"**{rd.name(fastest['model'])} the fastest** at "
-            f"{rd.fmt(fastest['images_per_second'], 1)} images per second. "
-            "Size is weights and buffers at float32, excluding optimizer "
+            headline
+            + "Size is weights and buffers at float32, excluding optimizer "
             "state; MiB means 1024*1024 bytes. A training checkpoint carrying "
             "AdamW's two moment tensors per parameter would be roughly three "
             "times these figures for reasons that have nothing to do with the "

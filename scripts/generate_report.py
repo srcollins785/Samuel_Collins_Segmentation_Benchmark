@@ -86,7 +86,7 @@ def _headline(data: dict) -> str:
     if best is None:
         return "_The benchmark has not produced results yet._"
 
-    parts = [
+    sentences = [
         f"**{rd.name(best['model'])} achieved the highest semantic mean IoU "
         f"at {rd.fmt(best['mean_iou'])}**"
     ]
@@ -94,22 +94,25 @@ def _headline(data: dict) -> str:
     smallest = rd.best(semantic, "model_size_mb", highest=False,
                        exclude=["kmeans"])
     if smallest is not None and smallest["model"] != best["model"]:
-        parts.append(
-            f"while {rd.name(smallest['model'])} reached "
+        # Appended to the first sentence as a subordinate clause, not joined
+        # as a separate one -- "...at 0.626. while SegFormer reached..." is
+        # what joining them with a period produces.
+        sentences[0] += (
+            f", while {rd.name(smallest['model'])} reached "
             f"{rd.fmt(rd.value(semantic, smallest['model'], 'mean_iou'))} at "
-            f"{rd.fmt(smallest['model_size_mb'], 1)} MiB, "
-            f"{rd.fmt(rd.value(semantic, best['model'], 'model_size_mb') / smallest['model_size_mb'], 1)}x "
-            "smaller"
+            f"{rd.fmt(smallest['model_size_mb'], 1)} MiB — "
+            f"{rd.fmt(rd.value(semantic, best['model'], 'model_size_mb') / smallest['model_size_mb'], 1)} "
+            "times smaller"
         )
 
     instance_best = rd.best(instance, "mask_ap") if not instance.empty else None
     if instance_best is not None:
-        parts.append(
+        sentences.append(
             f"On the instance track, {rd.name(instance_best['model'])} "
             f"reached {rd.fmt(instance_best['mask_ap'])} mask AP"
         )
 
-    return ". ".join(parts) + "."
+    return ". ".join(sentences) + "."
 
 
 def section_tasks() -> list:
