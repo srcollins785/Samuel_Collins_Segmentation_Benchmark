@@ -283,6 +283,16 @@ All measurements were taken on Apple M4 Max using the mps backend at float32 pre
 | YOLO11n-seg | instance | 2843583 | 10.91 | 92.83 | 6.02 | 166.20 | N/A |
 
 
+Some cells in that table read `N/A`. Section 29 asks that a measurement which does not apply be marked and explained rather than filled with a zero, because a zero in a memory or complexity column is a claim about the model and an `N/A` is a statement about the measurement:
+
+- **K-Means**, computational complexity: no neural network to trace.
+- **K-Means**, training memory: it runs on CPU, where there is no device memory to report.
+- **K-Means**, inference memory: it runs on CPU, where there is no device memory to report.
+- **Mask R-CNN**, computational complexity: detection models take a list of tensors and return a different type per mode, which the tracers cannot follow.
+- **YOLO11n-seg**, computational complexity: ultralytics model not traced.
+- **YOLO11n-seg**, training memory: ultralytics owns the training loop, so this benchmark's per-epoch instrumentation never runs.
+- **YOLO11n-seg**, inference memory: ultralytics owns the training loop, so this benchmark's per-epoch instrumentation never runs.
+
 Latency is batch-one; throughput is batched. Section 33 requires them distinguished because they answer different questions and the models do not rank the same way on both: a robot processing one frame at a time is bound by the first, a server scoring a queue by the second. The timed region is the forward pass, excluding file reading, preprocessing, host-device transfer and mask postprocessing - so these are model costs, not deployment estimates.
 
 **YOLO11n-seg is the smallest network** at 10.9 MiB, and **SegFormer-B0 the fastest** at 509.1 images per second. Size is weights and buffers at float32, excluding optimizer state; MiB means 1024*1024 bytes. A training checkpoint carrying AdamW's two moment tensors per parameter would be roughly three times these figures for reasons that have nothing to do with the architecture, which is why the inference artifact is what is compared.

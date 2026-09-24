@@ -397,6 +397,50 @@ def section_efficiency(data: dict) -> list:
     }, places=2))
     lines.append("")
 
+    # Section 29: N/A where a measurement does not apply, with the reason.
+    # Each absent measurement gets its own reason rather than one note
+    # covering all of them -- YOLO's complexity is missing because the model
+    # is not traceable, and its memory is missing because ultralytics owns
+    # the training loop, and those are not the same fact.
+    def why(model, measurement, note):
+        if measurement == "computational complexity":
+            return (note.replace("N/A: ", "") if note
+                    else "no tracer could account for this model")
+        if model == "yolo_seg":
+            return (
+                "ultralytics owns the training loop, so this benchmark's "
+                "per-epoch instrumentation never runs"
+            )
+        if model == "kmeans":
+            return "it runs on CPU, where there is no device memory to report"
+        return "not measured"
+
+    absent = []
+    for model, payload in sorted(data["raw"].items()):
+        efficiency_record = payload.get("efficiency", {})
+        note = efficiency_record.get("complexity_note", "")
+        for label, key in (
+            ("computational complexity", "gmacs"),
+            ("training memory", "peak_memory_mb"),
+            ("inference memory", "inference_memory_mb"),
+        ):
+            if (efficiency_record.get(key) is None
+                    and payload.get("training", {}).get(key) is None):
+                absent.append((model, label, why(model, label, note)))
+
+    if absent:
+        lines += _lead(
+            "Some cells in that table read `N/A`. Section 29 asks that a "
+            "measurement which does not apply be marked and explained rather "
+            "than filled with a zero, because a zero in a memory or "
+            "complexity column is a claim about the model and an `N/A` is a "
+            "statement about the measurement:"
+        )
+        lines += [
+            f"- **{rd.name(model)}**, {label}: {reason}."
+            for model, label, reason in absent
+        ] + [""]
+
     lines += _lead(
         "Latency is batch-one; throughput is batched. Section 33 requires "
         "them distinguished because they answer different questions and the "
