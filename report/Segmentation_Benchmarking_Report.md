@@ -107,6 +107,10 @@ It also demonstrates the point Section 22 makes about metric choice more cleanly
 
 What K-Means actually does is group pixels that look alike. That is a different task from naming objects: it separates a dark dog from a light lawn, but it also separates the dog's sunlit flank from its shadowed one, and merges a gray cat with gray pavement. Those are properties of color clustering, not deficiencies to be tuned away.
 
+The feature vector follows the course reading (Nayar, FPCV-5-2, slide 30), which shows that clustering on color alone yields clusters mapping to many disconnected segments, and that adding each pixel's spatial coordinates to make a five-dimensional vector gives a more useful description. This implementation uses CIELAB rather than RGB for the color axes, because k-means is driven entirely by distance and CIELAB distances correspond better to perceived difference.
+
+That reading also predicts this outcome. It lists k-means as sensitive to initialization and to outliers, requiring k to be chosen in advance, and describes it as suited to "relatively simple images". COCO photographs are not simple images, and the result above is what that caveat looks like when it is measured rather than asserted. The reading's own remedies for those weaknesses, mean shift and normalized graph cut, are among the alternatives Section 10 lists as optional; neither is implemented here.
+
 ## Experimental protocol
 
 | Setting | Value |

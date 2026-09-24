@@ -38,6 +38,14 @@ from ._config import IGNORE_INDEX, NUM_CLASSES, SEED
 # is included because color alone has no notion of adjacency, and without it
 # every scattered patch of similar color joins one cluster. It is weighted
 # below color so that position nudges rather than dominates.
+#
+# This is the five-dimensional feature vector Nayar recommends in the course
+# reading (FPCV-5-2, slide 30): clustering on color alone produces clusters
+# that "map to many disconnected segments in the image", and adding the
+# spatial coordinates encourages nearby pixels into the same segment. The
+# deviation from that slide is the color space, CIELAB rather than RGB,
+# because CIELAB distances track perceived difference and k-means is driven
+# entirely by distance.
 POSITION_WEIGHT = 0.35
 
 
