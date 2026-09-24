@@ -482,6 +482,100 @@ def section_discussion(data: dict) -> list:
                 "than searching for one.",
             )
 
+    # 30-34. Section 54 permits grouping related questions, and these five
+    # are the deployment questions Sections 55-58 answer in full. They are
+    # numbered here as well, with the answer stated, so the list of
+    # thirty-five can be followed straight down without having to notice
+    # that five of them were answered in a later section.
+    fastest_model = rd.best(semantic, "images_per_second", exclude=SEMANTIC_ONLY)
+    smallest_model = rd.best(semantic, "model_size_mb", highest=False,
+                             exclude=SEMANTIC_ONLY)
+    best_model = miou_best
+    lowest_latency = rd.best(semantic, "latency_ms", highest=False,
+                             exclude=SEMANTIC_ONLY)
+
+    if smallest_model is not None:
+        lines += _q(
+            "30", "Which model would you use for a UAV?",
+            f"{rd.name(smallest_model['model'])}, at "
+            f"{rd.fmt(smallest_model['model_size_mb'], 1)} MiB and "
+            f"{rd.fmt(rd.value(semantic, smallest_model['model'], 'images_per_second'), 1)} "
+            "images per second. The binding constraint is energy, so the "
+            "question is the best quality obtainable inside a few watts "
+            "rather than the best quality available. See the UAV scenario "
+            "below for the caveats, which matter more than the numbers: "
+            "these rates come from a laptop GPU, not airborne hardware, and "
+            "COCO is photographed at eye level rather than from altitude.",
+        )
+
+    if not instance.empty:
+        instance_best = rd.best(instance, "mask_ap")
+        lines += _q(
+            "31", "Which model would you use for a robot?",
+            "An instance model rather than a semantic one, because two "
+            "people standing together are a single region to every semantic "
+            "model here by design, and a planner needs to know there are "
+            "two. "
+            + (
+                f"{rd.name(instance_best['model'])} gives the better masks at "
+                f"{rd.fmt(instance_best['mask_ap'])} mask AP."
+                if instance_best is not None else ""
+            )
+            + " The cost of a missed object is asymmetric - failing to "
+            "segment a person risks harm, hallucinating an obstacle only "
+            "stops the robot - so recall matters more than precision, and "
+            "batch-one latency matters more than throughput.",
+        )
+
+    if smallest_model is not None:
+        lines += _q(
+            "32", "Which model would you use on a smartphone?",
+            f"{rd.name(smallest_model['model'])}, at "
+            f"{rd.fmt(smallest_model['model_size_mb'], 1)} MiB of float32 "
+            "weights, which int8 quantization would cut by roughly four. "
+            "**No claim is made about phone latency or power**, because "
+            "nothing in this benchmark ran on a phone. Mobile NPU "
+            "performance depends on operator support in the target runtime, "
+            "and a model that is fast here can be slow there if one operator "
+            "falls back to CPU.",
+        )
+
+    if best_model is not None:
+        lines += _q(
+            "33", "Which architecture would you select for cloud processing?",
+            f"{rd.name(best_model['model'])}, at mIoU "
+            f"{rd.fmt(best_model['mean_iou'])}. None of the constraints that "
+            "would penalize a large model apply: memory is cheap, batching "
+            "is available, and throughput can be bought with replicas while "
+            "quality cannot be bought any other way. If the downstream task "
+            "depends on edge precision - compositing, measurement, medical "
+            "overlay - the boundary F1 column should drive this choice "
+            "instead of mIoU, and the two do not always agree.",
+        )
+
+    balanced = rd.numeric(rd.numeric(semantic, "mean_iou"), "images_per_second")
+    balanced = balanced[~balanced["model"].isin(SEMANTIC_ONLY)]
+    if not balanced.empty:
+        quality_norm = balanced["mean_iou"] / balanced["mean_iou"].max()
+        speed_norm = (
+            balanced["images_per_second"] / balanced["images_per_second"].max()
+        )
+        balanced = balanced.assign(
+            score=2 * quality_norm * speed_norm / (quality_norm + speed_norm)
+        )
+        pick = balanced.loc[balanced["score"].idxmax()]
+        lines += _q(
+            "34", "Which model provides the best speed-quality balance?",
+            f"{rd.name(pick['model'])}, at mIoU {rd.fmt(pick['mean_iou'])} and "
+            f"{rd.fmt(pick['images_per_second'], 1)} images per second. "
+            "Scored by the harmonic mean of normalized mIoU and normalized "
+            "throughput, which penalizes being poor at either where an "
+            "arithmetic mean would let a strong score on one hide a weak one "
+            "on the other. The weighting is a choice rather than a fact, "
+            "which is why each deployment scenario below names its binding "
+            "constraint before it names a model.",
+        )
+
     # 35
     lines += _q(
         "35", "What segmentation errors were common across architectures?",

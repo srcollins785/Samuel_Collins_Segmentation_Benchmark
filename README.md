@@ -176,6 +176,22 @@ Section 13 asks for deviations to be recorded rather than smoothed over.
   Measured on this hardware: the seven semantic models at 25 epochs take
   roughly 9 hours at 256 and 35 hours at 512, and the full ten-model
   benchmark at 512 would exceed two days of continuous compute.
+- **Mask R-CNN completed 14 of 25 epochs.** The host ran out of memory:
+  Metal's allocator retains a driver-side cache its own accounting does not
+  report, and across rounds of COCOeval validation it grew until 20.6 GB was
+  wired and the machine was swapping. Epoch time went from 740 s to 4,374 s
+  and was still climbing. Validation mask AP had peaked at epoch 8 and had
+  not improved in the six epochs since, so the run was stopped and the model
+  evaluated from the epoch-8 checkpoint that the Section 21 rule had already
+  selected. `evaluate_instance` now releases the cache periodically, so a
+  rerun should reach 25. Recorded in `results/raw/maskrcnn.json` under
+  `config.early_stop_reason`.
+- **SegNet was evaluated from its checkpoint, not in one pass.** Its training
+  completed normally for all 25 epochs; the run then died in profiling,
+  because `thop` registers float64 buffers on every submodule and MPS cannot
+  hold float64. Profiling now runs on a copy. The model was recovered with
+  `scripts/recover_model.py` rather than retrained, since retraining would
+  have produced different weights from the ones the run selected.
 - **PSPNet's pyramid pooling pads its feature map.** Metal has no adaptive
   average pooling kernel for non-divisible sizes
   ([pytorch#96056](https://github.com/pytorch/pytorch/issues/96056)), and the
@@ -226,6 +242,7 @@ src/segmentation_benchmark/
     metrics.py          Section 22 semantic metrics
     boundary.py         Section 24 boundary F1
     instance_metrics.py Section 25 COCO mask AP
+    evaluate.py         one entry point over the three above
     efficiency.py       Sections 30-33 measurements
     benchmark.py        one model, end to end, to one JSON file
     tables.py           the required CSVs
@@ -235,12 +252,17 @@ scripts/
     build_coco_subset.py    the dataset
     verify_transforms.py    the Section 15 check
     run_full_benchmark.sh   every model, cheapest first
+    write_configuration.py  regenerates configuration.yaml
     generate_report.py      the report
+    build_report_pdf.py     renders it to PDF
+    recover_model.py        finish a model whose run died after training
+    backfill_predictions.py prediction figures from saved checkpoints
     report_data.py          queries the report asks of the results
     report_analysis.py      results sections
     report_discussion.py    Sections 53-58
-tests/                      161 tests
+tests/                      163 tests
 run_benchmark.py            the Section 51 command line
+configuration.yaml          the protocol, generated from _config.py
 ```
 
 ## Tests
@@ -249,7 +271,7 @@ run_benchmark.py            the Section 51 command line
 python -m pytest tests/ -q
 ```
 
-161 tests, no network access and no trained model required — they run on a
+163 tests, no network access and no trained model required — they run on a
 clean checkout before the dataset has been downloaded.
 
 ## License

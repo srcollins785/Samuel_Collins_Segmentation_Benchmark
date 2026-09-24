@@ -541,6 +541,26 @@ On augmentation: this run does not answer the question experimentally, because e
 
 PSPNet, reaching 90% of its own best validation mIoU by epoch 1. Measured relative to each model's own ceiling rather than an absolute score, because this is a question about speed of learning and the mIoU table already answers the question about final quality. The models that converge fastest are generally the pretrained ones, which begin near a good solution rather than searching for one.
 
+**30. Which model would you use for a UAV?**
+
+SegFormer-B0, at 14.2 MiB and 509.1 images per second. The binding constraint is energy, so the question is the best quality obtainable inside a few watts rather than the best quality available. See the UAV scenario below for the caveats, which matter more than the numbers: these rates come from a laptop GPU, not airborne hardware, and COCO is photographed at eye level rather than from altitude.
+
+**31. Which model would you use for a robot?**
+
+An instance model rather than a semantic one, because two people standing together are a single region to every semantic model here by design, and a planner needs to know there are two. Mask R-CNN gives the better masks at 0.284 mask AP. The cost of a missed object is asymmetric - failing to segment a person risks harm, hallucinating an obstacle only stops the robot - so recall matters more than precision, and batch-one latency matters more than throughput.
+
+**32. Which model would you use on a smartphone?**
+
+SegFormer-B0, at 14.2 MiB of float32 weights, which int8 quantization would cut by roughly four. **No claim is made about phone latency or power**, because nothing in this benchmark ran on a phone. Mobile NPU performance depends on operator support in the target runtime, and a model that is fast here can be slow there if one operator falls back to CPU.
+
+**33. Which architecture would you select for cloud processing?**
+
+PSPNet, at mIoU 0.626. None of the constraints that would penalize a large model apply: memory is cheap, batching is available, and throughput can be bought with replicas while quality cannot be bought any other way. If the downstream task depends on edge precision - compositing, measurement, medical overlay - the boundary F1 column should drive this choice instead of mIoU, and the two do not always agree.
+
+**34. Which model provides the best speed-quality balance?**
+
+SegFormer-B0, at mIoU 0.583 and 509.1 images per second. Scored by the harmonic mean of normalized mIoU and normalized throughput, which penalizes being poor at either where an arithmetic mean would let a strong score on one hide a weak one on the other. The weighting is a choice rather than a fact, which is why each deployment scenario below names its binding constraint before it names a model.
+
 **35. What segmentation errors were common across architectures?**
 
 Four recur across every model in this benchmark:
