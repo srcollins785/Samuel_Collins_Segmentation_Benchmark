@@ -95,7 +95,7 @@ Useful flags:
 |---|---|
 | `--input-size 256` | Section 13's low-compute resolution (what the reported run used) |
 | `--epochs N` | Epoch budget, default 25 |
-| `--skip-existing` | Skip models that already have a saved result — resumes an interrupted run |
+| `--skip-existing` | Skip models that already have a saved result, resumes an interrupted run |
 | `--scratch` | Train without pretrained weights |
 | `--tables-only` | Rebuild every CSV and figure from saved results, without training |
 
@@ -153,10 +153,10 @@ before reading a table.
 
 **Background is 83% of labeled pixels.** A model that predicts background
 everywhere scores about 0.83 pixel accuracy. The K-Means baseline scores
-almost exactly that, with a foreground mIoU near zero — which is why the
+almost exactly that, with a foreground mIoU near zero, which is why the
 tables lead with mIoU and per-class IoU rather than pixel accuracy.
 
-**Bicycle is 0.26% of pixels**, against person's 13.9% — a factor of more
+**Bicycle is 0.26% of pixels**, against person's 13.9%, a factor of more
 than 50. Six-class mIoU is steered by background and person, so the per-class
 table is reported before the mean rather than after it.
 
@@ -203,7 +203,7 @@ Section 13 asks for deviations to be recorded rather than smoothed over.
 - **FCN and DeepLabV3 have their auxiliary heads dropped.** torchvision's
   pretrained checkpoints size them for 21 VOC classes, and keeping them would
   give two of seven models a loss term the others lack.
-- **YOLO trains under ultralytics' own recipe** — its optimizer, schedule and
+- **YOLO trains under ultralytics' own recipe**, its optimizer, schedule and
   augmentation, not the Section 14 pipeline. Section 17 is explicit that
   instance models keep their architecture-specific configuration. Its
   predictions are scored by the same COCOeval wrapper as Mask R-CNN, so the
@@ -213,7 +213,7 @@ Section 13 asks for deviations to be recorded rather than smoothed over.
   ultralytics' `predict` includes its own preprocessing and NMS.
 - **Peak GPU memory is an allocator total, not a driver peak.** There is no
   CUDA on this hardware, so `torch.mps.current_allocated_memory` stands in
-  for `torch.cuda.max_memory_allocated`. Timing is unaffected — every timed
+  for `torch.cuda.max_memory_allocated`. Timing is unaffected, every timed
   region is bracketed by `torch.mps.synchronize`.
 - **Reruns are not bit-identical.** Seeding covers initialization, shuffling
   and augmentation, but Metal kernels are not deterministic and torch has no
@@ -221,7 +221,7 @@ Section 13 asks for deviations to be recorded rather than smoothed over.
 
 ## Checkpoints
 
-Trained weights are not committed — ten checkpoints exceed what a repository
+Trained weights are not committed, ten checkpoints exceed what a repository
 should carry. They are reproducible from the committed manifest at the same
 seed by rerunning the benchmark. `data/split_manifest.json` **is** committed,
 so the exact 7,000 images can be rebuilt without guessing.
@@ -271,7 +271,7 @@ configuration.yaml          the protocol, generated from _config.py
 python -m pytest tests/ -q
 ```
 
-163 tests, no network access and no trained model required — they run on a
+163 tests, no network access and no trained model required, they run on a
 clean checkout before the dataset has been downloaded.
 
 ## License

@@ -117,11 +117,11 @@ def main() -> int:
         axes[0].set_title("image", fontsize=10)
         axes[1].imshow(truth_panel)
         axes[1].set_title(
-            f"ground truth — {len(annotations)} instances", fontsize=10
+            f"ground truth, {len(annotations)} instances", fontsize=10
         )
         axes[2].imshow(prediction_panel)
         axes[2].set_title(
-            f"yolo_seg — {kept} above {args.score}", fontsize=10
+            f"yolo_seg, {kept} above {args.score}", fontsize=10
         )
         for axis in axes:
             axis.set_xticks([])

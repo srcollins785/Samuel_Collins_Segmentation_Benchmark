@@ -11,7 +11,7 @@ Repository: https://github.com/srcollins785/Samuel_Collins_Segmentation_Benchmar
 
 ## Summary
 
-**PSPNet achieved the highest semantic mean IoU at 0.626**, while SegFormer-B0 reached 0.583 at 14.2 MiB — 13.2 times smaller. On the instance track, Mask R-CNN reached 0.284 mask AP.
+**PSPNet achieved the highest semantic mean IoU at 0.626**, while SegFormer-B0 reached 0.583 at 14.2 MiB, 13.2 times smaller. On the instance track, Mask R-CNN reached 0.284 mask AP.
 
 Ten segmentation methods were trained and evaluated on one shared COCO 2017 subset - 5,000 training, 1,000 validation and 1,000 test images over six classes - under a common protocol of 25 epochs, AdamW at 1e-4, batch size 8, at 256x256 resolution, seed 42. Split checksum `a61d376d4a98c607`.
 
@@ -126,12 +126,12 @@ What K-Means actually does is group pixels that look alike. That is a different 
 
 Training applies, in this order:
 
-- `Resize` — size=256, image_interpolation=bilinear, mask_interpolation=nearest
-- `RandomHorizontalFlip` — p=0.5
-- `RandomScaleCrop` — size=256, scale_range=[0.75, 1.25], p=0.5, pad_image_fill=0, pad_mask_fill=255
-- `RandomRotation` — degrees=10.0, p=0.5, image_fill=0, mask_fill=255
-- `ColorJitter` — p=0.5, applies_to=image only, brightness=0.3, contrast=0.3, saturation=0.3, hue=0.05
-- `ToTensor+Normalize` — normalize=True, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+- `Resize`, size=256, image_interpolation=bilinear, mask_interpolation=nearest
+- `RandomHorizontalFlip`, p=0.5
+- `RandomScaleCrop`, size=256, scale_range=[0.75, 1.25], p=0.5, pad_image_fill=0, pad_mask_fill=255
+- `RandomRotation`, degrees=10.0, p=0.5, image_fill=0, mask_fill=255
+- `ColorJitter`, p=0.5, applies_to=image only, brightness=0.3, contrast=0.3, saturation=0.3, hue=0.05
+- `ToTensor+Normalize`, normalize=True, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
 
 Validation and test apply deterministic resizing and normalization only, so a validation score changes between epochs because the weights changed and for no other reason.
 

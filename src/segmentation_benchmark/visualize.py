@@ -216,7 +216,7 @@ def save_boundary_closeup(model, loader, device, model_name: str,
         axis.set_xticks([])
         axis.set_yticks([])
     figure.suptitle(
-        f"Boundary detail, {model_name} — boundary F1 uses a "
+        f"Boundary detail, {model_name}, boundary F1 uses a "
         f"{tolerance}px tolerance",
         fontsize=11,
     )
@@ -329,12 +329,12 @@ def save_instance_predictions(model, loader, device, model_name: str,
                 axes[0].set_title("image", fontsize=10)
                 axes[1].imshow(truth_panel)
                 axes[1].set_title(
-                    f"ground truth — {len(targets[index]['masks'])} instances",
+                    f"ground truth, {len(targets[index]['masks'])} instances",
                     fontsize=10,
                 )
                 axes[2].imshow(prediction_panel)
                 axes[2].set_title(
-                    f"{model_name} — {len(kept)} above {score_threshold}",
+                    f"{model_name}, {len(kept)} above {score_threshold}",
                     fontsize=10,
                 )
                 for axis in axes:

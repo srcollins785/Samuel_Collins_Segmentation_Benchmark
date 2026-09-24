@@ -100,7 +100,7 @@ def _headline(data: dict) -> str:
         sentences[0] += (
             f", while {rd.name(smallest['model'])} reached "
             f"{rd.fmt(rd.value(semantic, smallest['model'], 'mean_iou'))} at "
-            f"{rd.fmt(smallest['model_size_mb'], 1)} MiB — "
+            f"{rd.fmt(smallest['model_size_mb'], 1)} MiB, "
             f"{rd.fmt(rd.value(semantic, best['model'], 'model_size_mb') / smallest['model_size_mb'], 1)} "
             "times smaller"
         )
@@ -310,7 +310,7 @@ def section_protocol(data: dict) -> list:
                 f"{k}={v}" for k, v in step.items()
                 if k not in {"transform", "note"} and v is not None
             )
-            lines.append(f"- `{name}` — {details}" if details else f"- `{name}`")
+            lines.append(f"- `{name}`, {details}" if details else f"- `{name}`")
     lines += [
         "",
         "Validation and test apply deterministic resizing and normalization "
