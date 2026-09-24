@@ -1,0 +1,149 @@
+{
+  "model": "yolo_seg",
+  "task": "instance",
+  "run_id": "46abc4bf",
+  "config": {
+    "run_id": "46abc4bf",
+    "model": "yolo_seg",
+    "task": "instance",
+    "input_size": 256,
+    "batch_size": 8,
+    "epochs": 25,
+    "seed": 42,
+    "split_checksum": "a61d376d4a98c607",
+    "export": {
+      "train": {
+        "split": "train",
+        "images": 5000,
+        "instances": 21396,
+        "dropped_instances": 14,
+        "polygon_roundtrip_mean_iou": 0.9679525088126186,
+        "polygon_roundtrip_min_iou": 0.12105263157894737,
+        "conversion_note": "masks converted to external contours; holes are filled and fragmented instances keep their largest component"
+      },
+      "val": {
+        "split": "val",
+        "images": 1000,
+        "instances": 4111,
+        "dropped_instances": 0,
+        "polygon_roundtrip_mean_iou": 0.9649893778999461,
+        "polygon_roundtrip_min_iou": 0.15088757396449703,
+        "conversion_note": "masks converted to external contours; holes are filled and fragmented instances keep their largest component"
+      },
+      "test": {
+        "split": "test",
+        "images": 1000,
+        "instances": 4350,
+        "dropped_instances": 2,
+        "polygon_roundtrip_mean_iou": 0.9689658616745096,
+        "polygon_roundtrip_min_iou": 0.15322386689113845,
+        "conversion_note": "masks converted to external contours; holes are filled and fragmented instances keep their largest component"
+      },
+      "dataset_yaml": "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/yolo_workspace/dataset.yaml"
+    },
+    "variant": "yolo11n-seg.pt",
+    "weights": "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/yolo_workspace/runs/segment/weights/best.pt",
+    "results_csv": "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/yolo_workspace/runs/segment/results.csv",
+    "checkpoint_selection": "ultralytics selects best.pt on its own validation metric, computed over our validation split",
+    "deviations": [
+      "ultralytics augmentation (mosaic, HSV, translate, scale, flip) rather than the Section 14 pipeline",
+      "ultralytics optimizer and learning-rate schedule rather than AdamW at 1e-4"
+    ],
+    "save_dir": "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/yolo_workspace/runs/segment"
+  },
+  "card": {
+    "task": "instance",
+    "backbone": "YOLO11n-seg",
+    "initialization": "ultralytics yolo11n-seg.pt (COCO pretrained)",
+    "paper": "Jocher et al. / Ultralytics"
+  },
+  "loss": {
+    "note": "Section 17: ultralytics' own segmentation losses (box, class, DFL, mask). The semantic CE+Dice recipe is not applied."
+  },
+  "training": {
+    "total_train_seconds": 2320.6311108330265,
+    "wall_clock_seconds": 2320.6311108330265,
+    "completed_epochs": 25,
+    "mean_epoch_seconds": 92.82524443332106,
+    "epochs": [],
+    "note": "ultralytics owns the loop; per-epoch history is in its own results.csv, referenced from config.results_csv"
+  },
+  "test": {
+    "mask_ap": 0.1584177849230016,
+    "mask_ap50": 0.278695650244853,
+    "mask_ap75": 0.16285567050691116,
+    "mask_ap_small": 0.011938755010409112,
+    "mask_ap_medium": 0.1354551884545713,
+    "mask_ap_large": 0.2879655300897636,
+    "mask_ar_1": 0.17132314321098,
+    "mask_ar_10": 0.23180148751962215,
+    "mask_ar_100": 0.24002457951777337,
+    "mask_ar_small": 0.02286684050092145,
+    "mask_ar_medium": 0.21315182619144543,
+    "mask_ar_large": 0.4137913328251531,
+    "per_class_mask_ap": {
+      "person": 0.21535326351984574,
+      "car": 0.10998862605492779,
+      "bicycle": 0.007957145843689714,
+      "dog": 0.08087923386568807,
+      "cat": 0.37791065533085677
+    },
+    "detections": 11441,
+    "images": 1000,
+    "conventions": {
+      "evaluator": "pycocotools COCOeval",
+      "primary_metric": "mask AP averaged over IoU 0.50:0.05:0.95",
+      "class_averaging": "per category, then averaged over categories",
+      "score_threshold": 0.05,
+      "max_detections": 100,
+      "mask_binarization": "sigmoid output thresholded at 0.5",
+      "resolution": "predictions resized to native resolution; ground truth unmodified",
+      "crowd_regions": "retained in ground truth; COCOeval uses them to suppress false positives on unannotated groups",
+      "box_ap": "secondary only (Section 25); mask quality is the objective",
+      "reported_as": "fractions in [0, 1], not percentages",
+      "prediction_source": "ultralytics predict with retina_masks=True, then resized to native resolution and scored by the shared COCOeval wrapper"
+    },
+    "box_ap": 0.1939500950331284,
+    "box_ap50": 0.3086267130207828,
+    "box_ap75": 0.2106986984266551,
+    "model": "yolo_seg"
+  },
+  "efficiency": {
+    "total_parameters": 2843583,
+    "trainable_parameters": 0,
+    "frozen_parameters": 2843583,
+    "frozen_layers": "none (all models fine-tuned end to end)",
+    "weight_size_mb": 10.909,
+    "checkpoint_size_mb": 5.678,
+    "latency_ms": 6.016878322698176,
+    "latency_batch_size": 1,
+    "throughput_images_per_second": 166.19913954842374,
+    "throughput_batch_size": 1,
+    "timed_region": "ultralytics predict end to end, which includes its own preprocessing and NMS -- not comparable pass-for-pass with the forward-only timing used for the torchvision models",
+    "inference_memory_mb": null,
+    "gmacs": null,
+    "complexity_note": "N/A: ultralytics model not traced",
+    "environment": {
+      "python": "3.12.13",
+      "torch": "2.14.0",
+      "torchvision": "0.29.0",
+      "numpy": "2.5.3",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "processor": "arm",
+      "seed": 42,
+      "precision": "float32",
+      "mixed_precision": false,
+      "device": "Apple M4 Max",
+      "backend": "mps",
+      "memory_metric": "torch.mps.current_allocated_memory (allocator total, not a driver-level peak; weaker than the CUDA equivalent)"
+    }
+  },
+  "predictions": [
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/yolo_seg/example_00.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/yolo_seg/example_01.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/yolo_seg/example_02.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/yolo_seg/example_03.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/yolo_seg/example_04.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/yolo_seg/example_05.png"
+  ]
+}

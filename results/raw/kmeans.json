@@ -1,0 +1,179 @@
+{
+  "model": "kmeans",
+  "task": "traditional",
+  "run_id": "56da6270",
+  "config": {
+    "run_id": "56da6270",
+    "model": "kmeans",
+    "task": "traditional",
+    "input_size": 256,
+    "batch_size": 1,
+    "epochs": 0,
+    "seed": 42,
+    "split_checksum": "a61d376d4a98c607",
+    "n_clusters": 6,
+    "features": "CIELAB + normalized position",
+    "position_weight": 0.35,
+    "mapping_source": "training images only",
+    "mapping_bins": 58,
+    "fit_images": 300,
+    "unseen_descriptor_fallback": "background",
+    "note": "Cluster IDs are not class labels. The descriptor-to-class mapping is fitted on training data and frozen before any validation or test image is seen.",
+    "descriptor_bins": 58,
+    "bins_per_class": {
+      "0": 53,
+      "1": 5,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+    }
+  },
+  "card": {
+    "task": "traditional",
+    "backbone": "none",
+    "initialization": "none (unsupervised, fitted per image)",
+    "paper": "Lloyd 1982 / MacQueen 1967"
+  },
+  "training": {
+    "total_train_seconds": 25.973749542143196,
+    "mean_epoch_seconds": 25.973749542143196,
+    "completed_epochs": 0,
+    "best_epoch": null,
+    "epochs": [],
+    "note": "unsupervised; 'training' is fitting the frozen class mapping"
+  },
+  "test": {
+    "pixel_accuracy": 0.8250282652285996,
+    "mean_iou": 0.13851065488736516,
+    "mean_iou_foreground": 0.001229083554831797,
+    "dice": 0.15271273643329666,
+    "pixel_f1": 0.15271273643329666,
+    "precision": 0.5252265994205866,
+    "recall": 0.16710318803401783,
+    "per_class_iou": {
+      "background": 0.8249185115500319,
+      "person": 0.0061454177741589846,
+      "car": 0.0,
+      "bicycle": 0.0,
+      "dog": 0.0,
+      "cat": 0.0
+    },
+    "per_class_dice": {
+      "background": 0.9040606540281851,
+      "person": 0.01221576457159475,
+      "car": 0.0,
+      "bicycle": 0.0,
+      "dog": 0.0,
+      "cat": 0.0
+    },
+    "per_class_precision": {
+      "background": 0.8274263618915818,
+      "person": 0.22302683694959136,
+      "car": null,
+      "bicycle": null,
+      "dog": null,
+      "cat": null
+    },
+    "per_class_recall": {
+      "background": 0.9963392635939665,
+      "person": 0.006279864610140486,
+      "car": 0.0,
+      "bicycle": 0.0,
+      "dog": 0.0,
+      "cat": 0.0
+    },
+    "support_pixels": {
+      "background": 53950074,
+      "person": 9190644,
+      "car": 797526,
+      "bicycle": 165574,
+      "dog": 366778,
+      "cat": 751767
+    },
+    "conventions": {
+      "definition": "Csurka et al. 2013 boundary F1",
+      "tolerance_px": 3,
+      "evaluation_resolution": "same as the semantic metrics, so IoU and boundary F1 describe one prediction rather than two resamplings",
+      "boundary": "inner: region minus its 4-connected erosion",
+      "distance": "Euclidean, via exact distance transform",
+      "ignored_pixels": "boundary pixels inside ignored regions excluded",
+      "absent_classes": "excluded from the mean, not scored zero",
+      "averaging": "macro over classes present"
+    },
+    "boundary_precision": 0.5200169633831973,
+    "boundary_recall": 0.10476238429158398,
+    "boundary_f1": 0.12632561607989776,
+    "boundary_f1_foreground": 0.0037705830148038882,
+    "per_class_boundary_precision": {
+      "background": 0.9184435355158249,
+      "person": 0.12159039125056963,
+      "car": null,
+      "bicycle": null,
+      "dog": null,
+      "cat": null
+    },
+    "per_class_boundary_recall": {
+      "background": 0.6183556318666947,
+      "person": 0.010218673882809162,
+      "car": 0.0,
+      "bicycle": 0.0,
+      "dog": 0.0,
+      "cat": 0.0
+    },
+    "per_class_boundary_f1": {
+      "background": 0.7391007814053672,
+      "person": 0.01885291507401944,
+      "car": 0.0,
+      "bicycle": 0.0,
+      "dog": 0.0,
+      "cat": 0.0
+    },
+    "boundary_truth_pixels": {
+      "background": 1720442,
+      "person": 662219,
+      "car": 57799,
+      "bicycle": 16538,
+      "dog": 25591,
+      "cat": 29012
+    },
+    "images": 1000
+  },
+  "efficiency": {
+    "total_parameters": 0,
+    "trainable_parameters": 0,
+    "frozen_parameters": 0,
+    "weight_size_mb": 0.0016,
+    "checkpoint_size_mb": 0.0016,
+    "gmacs": null,
+    "complexity_note": "N/A: no neural network to trace",
+    "latency_ms": 84.21803110232577,
+    "latency_batch_size": 1,
+    "throughput_images_per_second": 11.873941802141987,
+    "throughput_batch_size": 1,
+    "inference_memory_mb": null,
+    "timed_region": "per-image K-Means fit and cluster labeling, on CPU",
+    "environment": {
+      "python": "3.12.13",
+      "torch": "2.14.0",
+      "torchvision": "0.29.0",
+      "numpy": "2.5.3",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "processor": "arm",
+      "seed": 42,
+      "precision": "float32",
+      "mixed_precision": false,
+      "device": "Apple M4 Max",
+      "backend": "mps",
+      "memory_metric": "torch.mps.current_allocated_memory (allocator total, not a driver-level peak; weaker than the CUDA equivalent)"
+    }
+  },
+  "predictions": [
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/kmeans/clusters_00.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/kmeans/clusters_01.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/kmeans/clusters_02.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/kmeans/clusters_03.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/kmeans/clusters_04.png",
+    "/Users/samuelcollins/Projects/Computer Vision/Assignment 4/Samuel_Collins_Segmentation_Benchmark/predictions/kmeans/clusters_05.png"
+  ]
+}

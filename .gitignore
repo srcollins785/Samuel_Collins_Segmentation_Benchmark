@@ -26,6 +26,15 @@ data/annotations/*.zip
 # added deliberately with `git add -f logs/` once the full run completes.
 logs/*.json
 
+# Raw console logs from the runner. These are mostly terminal control codes
+# from progress bars -- yolo_run.log is 2.8 MB of carriage returns -- and the
+# structured per-epoch history in logs/<model>_history.json holds everything
+# they contain that matters.
+logs/*.log
+
+# Build intermediate for the PDF.
+report/*.html
+
 # Results and figures, for the same reason: they are written by every run,
 # including the short ones used while developing and the synthetic ones used
 # to prove the table and figure code works before any model had trained.
